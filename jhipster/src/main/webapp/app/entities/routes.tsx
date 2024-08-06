@@ -10,7 +10,6 @@ import Specialty from './specialty';
 import Vet from './vet';
 import Pet from './pet';
 import Owner from './owner';
-import Role from './role';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 export default () => {
@@ -25,7 +24,6 @@ export default () => {
         <Route path="vet/*" element={<Vet />} />
         <Route path="pet/*" element={<Pet />} />
         <Route path="owner/*" element={<Owner />} />
-        <Route path="role/*" element={<Role />} />
         {/* jhipster-needle-add-route-path - JHipster will add routes here */}
       </ErrorBoundaryRoutes>
     </div>

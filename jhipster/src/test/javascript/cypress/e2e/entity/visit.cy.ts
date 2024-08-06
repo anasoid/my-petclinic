@@ -166,8 +166,8 @@ describe('Visit e2e test', () => {
       cy.get(`[data-cy="date"]`).blur();
       cy.get(`[data-cy="date"]`).should('have.value', '2024-08-05');
 
-      cy.get(`[data-cy="description"]`).type('original');
-      cy.get(`[data-cy="description"]`).should('have.value', 'original');
+      cy.get(`[data-cy="description"]`).type('um voluntarily');
+      cy.get(`[data-cy="description"]`).should('have.value', 'um voluntarily');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

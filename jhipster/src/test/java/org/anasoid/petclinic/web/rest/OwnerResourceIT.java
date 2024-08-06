@@ -769,7 +769,7 @@ class OwnerResourceIT {
         Owner partialUpdatedOwner = new Owner();
         partialUpdatedOwner.setId(owner.getId());
 
-        partialUpdatedOwner.firstName(UPDATED_FIRST_NAME).address(UPDATED_ADDRESS).telephone(UPDATED_TELEPHONE);
+        partialUpdatedOwner.firstName(UPDATED_FIRST_NAME).address(UPDATED_ADDRESS);
 
         restOwnerMockMvc
             .perform(

@@ -15,7 +15,7 @@ describe('Owner e2e test', () => {
   const ownerPageUrlPattern = new RegExp('/owner(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const ownerSample = { firstName: 'Frankie', address: 'buzz geez', city: 'East Ramona', telephone: 2945 };
+  const ownerSample = { firstName: 'Vivianne', address: 'aw', city: 'Gresham', telephone: 13398 };
 
   let owner;
 
@@ -162,23 +162,23 @@ describe('Owner e2e test', () => {
     });
 
     it('should create an instance of Owner', () => {
-      cy.get(`[data-cy="firstName"]`).type('Aida');
-      cy.get(`[data-cy="firstName"]`).should('have.value', 'Aida');
+      cy.get(`[data-cy="firstName"]`).type('Esmeralda');
+      cy.get(`[data-cy="firstName"]`).should('have.value', 'Esmeralda');
 
-      cy.get(`[data-cy="lastName"]`).type('Toy');
-      cy.get(`[data-cy="lastName"]`).should('have.value', 'Toy');
+      cy.get(`[data-cy="lastName"]`).type('Collins-Wehner');
+      cy.get(`[data-cy="lastName"]`).should('have.value', 'Collins-Wehner');
 
-      cy.get(`[data-cy="address"]`).type('autowind hiss');
-      cy.get(`[data-cy="address"]`).should('have.value', 'autowind hiss');
+      cy.get(`[data-cy="address"]`).type('fooey difficulty offensively');
+      cy.get(`[data-cy="address"]`).should('have.value', 'fooey difficulty offensively');
 
-      cy.get(`[data-cy="city"]`).type('Lake Jevon');
-      cy.get(`[data-cy="city"]`).should('have.value', 'Lake Jevon');
+      cy.get(`[data-cy="city"]`).type('East Luigiberg');
+      cy.get(`[data-cy="city"]`).should('have.value', 'East Luigiberg');
 
-      cy.get(`[data-cy="telephone"]`).type('11918');
-      cy.get(`[data-cy="telephone"]`).should('have.value', '11918');
+      cy.get(`[data-cy="telephone"]`).type('2876');
+      cy.get(`[data-cy="telephone"]`).should('have.value', '2876');
 
-      cy.get(`[data-cy="ffff"]`).type('yet');
-      cy.get(`[data-cy="ffff"]`).should('have.value', 'yet');
+      cy.get(`[data-cy="ffff"]`).type('sunbathe sad blah');
+      cy.get(`[data-cy="ffff"]`).should('have.value', 'sunbathe sad blah');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

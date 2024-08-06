@@ -15,7 +15,7 @@ describe('Vet e2e test', () => {
   const vetPageUrlPattern = new RegExp('/vet(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const vetSample = { firstName: 'Aliyah' };
+  const vetSample = { firstName: 'Caden' };
 
   let vet;
 
@@ -162,11 +162,11 @@ describe('Vet e2e test', () => {
     });
 
     it('should create an instance of Vet', () => {
-      cy.get(`[data-cy="firstName"]`).type('Tyra');
-      cy.get(`[data-cy="firstName"]`).should('have.value', 'Tyra');
+      cy.get(`[data-cy="firstName"]`).type('Reilly');
+      cy.get(`[data-cy="firstName"]`).should('have.value', 'Reilly');
 
-      cy.get(`[data-cy="lastName"]`).type('Leuschke');
-      cy.get(`[data-cy="lastName"]`).should('have.value', 'Leuschke');
+      cy.get(`[data-cy="lastName"]`).type('Rempel');
+      cy.get(`[data-cy="lastName"]`).should('have.value', 'Rempel');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

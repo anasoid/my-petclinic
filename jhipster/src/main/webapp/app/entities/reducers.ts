@@ -5,7 +5,6 @@ import specialty from 'app/entities/specialty/specialty.reducer';
 import vet from 'app/entities/vet/vet.reducer';
 import pet from 'app/entities/pet/pet.reducer';
 import owner from 'app/entities/owner/owner.reducer';
-import role from 'app/entities/role/role.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 const entitiesReducers = {
@@ -16,7 +15,6 @@ const entitiesReducers = {
   vet,
   pet,
   owner,
-  role,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
 };
 
