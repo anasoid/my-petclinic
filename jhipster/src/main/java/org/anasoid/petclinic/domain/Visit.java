@@ -33,7 +33,7 @@ public class Visit implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "type", "visits", "owner" }, allowSetters = true)
-    private Pet pets;
+    private Pet pet;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -76,16 +76,16 @@ public class Visit implements Serializable {
         this.description = description;
     }
 
-    public Pet getPets() {
-        return this.pets;
+    public Pet getPet() {
+        return this.pet;
     }
 
-    public void setPets(Pet pet) {
-        this.pets = pet;
+    public void setPet(Pet pet) {
+        this.pet = pet;
     }
 
-    public Visit pets(Pet pet) {
-        this.setPets(pet);
+    public Visit pet(Pet pet) {
+        this.setPet(pet);
         return this;
     }
 

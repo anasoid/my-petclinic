@@ -73,7 +73,6 @@ public class OwnerGatlingTest extends Simulation {
                                 ", \"address\": \"SAMPLE_TEXT\"" +
                                 ", \"city\": \"SAMPLE_TEXT\"" +
                                 ", \"telephone\": 0" +
-                                ", \"ffff\": \"SAMPLE_TEXT\"" +
                                 "}"
                             )
                         )

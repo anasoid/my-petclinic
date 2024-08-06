@@ -1,7 +1,7 @@
 package org.anasoid.petclinic.service;
 
 import java.util.Optional;
-import org.anasoid.petclinic.service.dto.OwnerDTO;
+import org.anasoid.petclinic.domain.Owner;
 
 /**
  * Service Interface for managing {@link org.anasoid.petclinic.domain.Owner}.
@@ -10,26 +10,26 @@ public interface OwnerService {
     /**
      * Save a owner.
      *
-     * @param ownerDTO the entity to save.
+     * @param owner the entity to save.
      * @return the persisted entity.
      */
-    OwnerDTO save(OwnerDTO ownerDTO);
+    Owner save(Owner owner);
 
     /**
      * Updates a owner.
      *
-     * @param ownerDTO the entity to update.
+     * @param owner the entity to update.
      * @return the persisted entity.
      */
-    OwnerDTO update(OwnerDTO ownerDTO);
+    Owner update(Owner owner);
 
     /**
      * Partially updates a owner.
      *
-     * @param ownerDTO the entity to update partially.
+     * @param owner the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<OwnerDTO> partialUpdate(OwnerDTO ownerDTO);
+    Optional<Owner> partialUpdate(Owner owner);
 
     /**
      * Get the "id" owner.
@@ -37,7 +37,7 @@ public interface OwnerService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<OwnerDTO> findOne(Long id);
+    Optional<Owner> findOne(Long id);
 
     /**
      * Delete the "id" owner.

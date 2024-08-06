@@ -80,7 +80,6 @@ class OwnerCriteriaTest {
         ownerCriteria.address();
         ownerCriteria.city();
         ownerCriteria.telephone();
-        ownerCriteria.ffff();
         ownerCriteria.petsId();
         ownerCriteria.distinct();
     }
@@ -94,7 +93,6 @@ class OwnerCriteriaTest {
                 condition.apply(criteria.getAddress()) &&
                 condition.apply(criteria.getCity()) &&
                 condition.apply(criteria.getTelephone()) &&
-                condition.apply(criteria.getFfff()) &&
                 condition.apply(criteria.getPetsId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
@@ -110,7 +108,6 @@ class OwnerCriteriaTest {
                 condition.apply(criteria.getAddress(), copy.getAddress()) &&
                 condition.apply(criteria.getCity(), copy.getCity()) &&
                 condition.apply(criteria.getTelephone(), copy.getTelephone()) &&
-                condition.apply(criteria.getFfff(), copy.getFfff()) &&
                 condition.apply(criteria.getPetsId(), copy.getPetsId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"

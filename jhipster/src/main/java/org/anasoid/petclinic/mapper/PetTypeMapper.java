@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Map PetType & PetTypeDto using mapstruct
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PetTypeMapper {
 
     PetType toPetType(PetTypeDto petTypeDto);

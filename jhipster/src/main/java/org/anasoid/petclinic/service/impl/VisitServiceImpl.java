@@ -4,8 +4,6 @@ import java.util.Optional;
 import org.anasoid.petclinic.domain.Visit;
 import org.anasoid.petclinic.repository.VisitRepository;
 import org.anasoid.petclinic.service.VisitService;
-import org.anasoid.petclinic.service.dto.VisitDTO;
-import org.anasoid.petclinic.service.mapper.VisitMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,49 +20,46 @@ public class VisitServiceImpl implements VisitService {
 
     private final VisitRepository visitRepository;
 
-    private final VisitMapper visitMapper;
-
-    public VisitServiceImpl(VisitRepository visitRepository, VisitMapper visitMapper) {
+    public VisitServiceImpl(VisitRepository visitRepository) {
         this.visitRepository = visitRepository;
-        this.visitMapper = visitMapper;
     }
 
     @Override
-    public VisitDTO save(VisitDTO visitDTO) {
-        log.debug("Request to save Visit : {}", visitDTO);
-        Visit visit = visitMapper.toEntity(visitDTO);
-        visit = visitRepository.save(visit);
-        return visitMapper.toDto(visit);
+    public Visit save(Visit visit) {
+        log.debug("Request to save Visit : {}", visit);
+        return visitRepository.save(visit);
     }
 
     @Override
-    public VisitDTO update(VisitDTO visitDTO) {
-        log.debug("Request to update Visit : {}", visitDTO);
-        Visit visit = visitMapper.toEntity(visitDTO);
-        visit = visitRepository.save(visit);
-        return visitMapper.toDto(visit);
+    public Visit update(Visit visit) {
+        log.debug("Request to update Visit : {}", visit);
+        return visitRepository.save(visit);
     }
 
     @Override
-    public Optional<VisitDTO> partialUpdate(VisitDTO visitDTO) {
-        log.debug("Request to partially update Visit : {}", visitDTO);
+    public Optional<Visit> partialUpdate(Visit visit) {
+        log.debug("Request to partially update Visit : {}", visit);
 
         return visitRepository
-            .findById(visitDTO.getId())
+            .findById(visit.getId())
             .map(existingVisit -> {
-                visitMapper.partialUpdate(existingVisit, visitDTO);
+                if (visit.getDate() != null) {
+                    existingVisit.setDate(visit.getDate());
+                }
+                if (visit.getDescription() != null) {
+                    existingVisit.setDescription(visit.getDescription());
+                }
 
                 return existingVisit;
             })
-            .map(visitRepository::save)
-            .map(visitMapper::toDto);
+            .map(visitRepository::save);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<VisitDTO> findOne(Long id) {
+    public Optional<Visit> findOne(Long id) {
         log.debug("Request to get Visit : {}", id);
-        return visitRepository.findById(id).map(visitMapper::toDto);
+        return visitRepository.findById(id);
     }
 
     @Override

@@ -77,7 +77,7 @@ class VisitCriteriaTest {
         visitCriteria.id();
         visitCriteria.date();
         visitCriteria.description();
-        visitCriteria.petsId();
+        visitCriteria.petId();
         visitCriteria.distinct();
     }
 
@@ -87,7 +87,7 @@ class VisitCriteriaTest {
                 condition.apply(criteria.getId()) &&
                 condition.apply(criteria.getDate()) &&
                 condition.apply(criteria.getDescription()) &&
-                condition.apply(criteria.getPetsId()) &&
+                condition.apply(criteria.getPetId()) &&
                 condition.apply(criteria.getDistinct()),
             "every filter matches"
         );
@@ -99,7 +99,7 @@ class VisitCriteriaTest {
                 condition.apply(criteria.getId(), copy.getId()) &&
                 condition.apply(criteria.getDate(), copy.getDate()) &&
                 condition.apply(criteria.getDescription(), copy.getDescription()) &&
-                condition.apply(criteria.getPetsId(), copy.getPetsId()) &&
+                condition.apply(criteria.getPetId(), copy.getPetId()) &&
                 condition.apply(criteria.getDistinct(), copy.getDistinct()),
             "every filter matches"
         );

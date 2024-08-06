@@ -5,8 +5,6 @@ import org.anasoid.petclinic.domain.*; // for static metamodels
 import org.anasoid.petclinic.domain.Specialty;
 import org.anasoid.petclinic.repository.SpecialtyRepository;
 import org.anasoid.petclinic.service.criteria.SpecialtyCriteria;
-import org.anasoid.petclinic.service.dto.SpecialtyDTO;
-import org.anasoid.petclinic.service.mapper.SpecialtyMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Specialty} entities in the database.
  * The main input is a {@link SpecialtyCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link SpecialtyDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link Specialty} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class SpecialtyQueryService extends QueryService<Specialty> {
 
     private final SpecialtyRepository specialtyRepository;
 
-    private final SpecialtyMapper specialtyMapper;
-
-    public SpecialtyQueryService(SpecialtyRepository specialtyRepository, SpecialtyMapper specialtyMapper) {
+    public SpecialtyQueryService(SpecialtyRepository specialtyRepository) {
         this.specialtyRepository = specialtyRepository;
-        this.specialtyMapper = specialtyMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link SpecialtyDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link Specialty} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<SpecialtyDTO> findByCriteria(SpecialtyCriteria criteria, Pageable page) {
+    public Page<Specialty> findByCriteria(SpecialtyCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Specialty> specification = createSpecification(criteria);
-        return specialtyRepository.findAll(specification, page).map(specialtyMapper::toDto);
+        return specialtyRepository.findAll(specification, page);
     }
 
     /**

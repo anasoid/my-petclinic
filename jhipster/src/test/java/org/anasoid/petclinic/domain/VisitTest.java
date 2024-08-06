@@ -24,14 +24,14 @@ class VisitTest {
     }
 
     @Test
-    void petsTest() {
+    void petTest() {
         Visit visit = getVisitRandomSampleGenerator();
         Pet petBack = getPetRandomSampleGenerator();
 
-        visit.setPets(petBack);
-        assertThat(visit.getPets()).isEqualTo(petBack);
+        visit.setPet(petBack);
+        assertThat(visit.getPet()).isEqualTo(petBack);
 
-        visit.pets(null);
-        assertThat(visit.getPets()).isNull();
+        visit.pet(null);
+        assertThat(visit.getPet()).isNull();
     }
 }

@@ -5,8 +5,6 @@ import org.anasoid.petclinic.domain.*; // for static metamodels
 import org.anasoid.petclinic.domain.Visit;
 import org.anasoid.petclinic.repository.VisitRepository;
 import org.anasoid.petclinic.service.criteria.VisitCriteria;
-import org.anasoid.petclinic.service.dto.VisitDTO;
-import org.anasoid.petclinic.service.mapper.VisitMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,7 +18,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Visit} entities in the database.
  * The main input is a {@link VisitCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link VisitDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link Visit} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -30,24 +28,21 @@ public class VisitQueryService extends QueryService<Visit> {
 
     private final VisitRepository visitRepository;
 
-    private final VisitMapper visitMapper;
-
-    public VisitQueryService(VisitRepository visitRepository, VisitMapper visitMapper) {
+    public VisitQueryService(VisitRepository visitRepository) {
         this.visitRepository = visitRepository;
-        this.visitMapper = visitMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link VisitDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link Visit} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<VisitDTO> findByCriteria(VisitCriteria criteria, Pageable page) {
+    public Page<Visit> findByCriteria(VisitCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Visit> specification = createSpecification(criteria);
-        return visitRepository.findAll(specification, page).map(visitMapper::toDto);
+        return visitRepository.findAll(specification, page);
     }
 
     /**
@@ -83,9 +78,9 @@ public class VisitQueryService extends QueryService<Visit> {
             if (criteria.getDescription() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescription(), Visit_.description));
             }
-            if (criteria.getPetsId() != null) {
+            if (criteria.getPetId() != null) {
                 specification = specification.and(
-                    buildSpecification(criteria.getPetsId(), root -> root.join(Visit_.pets, JoinType.LEFT).get(Pet_.id))
+                    buildSpecification(criteria.getPetId(), root -> root.join(Visit_.pet, JoinType.LEFT).get(Pet_.id))
                 );
             }
         }

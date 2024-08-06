@@ -17,8 +17,6 @@ import org.anasoid.petclinic.IntegrationTest;
 import org.anasoid.petclinic.domain.Pet;
 import org.anasoid.petclinic.domain.Visit;
 import org.anasoid.petclinic.repository.VisitRepository;
-import org.anasoid.petclinic.service.dto.VisitDTO;
-import org.anasoid.petclinic.service.mapper.VisitMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,9 +53,6 @@ class VisitResourceIT {
 
     @Autowired
     private VisitRepository visitRepository;
-
-    @Autowired
-    private VisitMapper visitMapper;
 
     @Autowired
     private EntityManager em;
@@ -109,20 +104,18 @@ class VisitResourceIT {
     void createVisit() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Visit
-        VisitDTO visitDTO = visitMapper.toDto(visit);
-        var returnedVisitDTO = om.readValue(
+        var returnedVisit = om.readValue(
             restVisitMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(visitDTO)))
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(visit)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            VisitDTO.class
+            Visit.class
         );
 
         // Validate the Visit in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedVisit = visitMapper.toEntity(returnedVisitDTO);
         assertVisitUpdatableFieldsEquals(returnedVisit, getPersistedVisit(returnedVisit));
 
         insertedVisit = returnedVisit;
@@ -133,13 +126,12 @@ class VisitResourceIT {
     void createVisitWithExistingId() throws Exception {
         // Create the Visit with an existing ID
         visit.setId(1L);
-        VisitDTO visitDTO = visitMapper.toDto(visit);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restVisitMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(visitDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(visit)))
             .andExpect(status().isBadRequest());
 
         // Validate the Visit in the database
@@ -154,10 +146,9 @@ class VisitResourceIT {
         visit.setDate(null);
 
         // Create the Visit, which fails.
-        VisitDTO visitDTO = visitMapper.toDto(visit);
 
         restVisitMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(visitDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(visit)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -332,24 +323,24 @@ class VisitResourceIT {
 
     @Test
     @Transactional
-    void getAllVisitsByPetsIsEqualToSomething() throws Exception {
-        Pet pets;
+    void getAllVisitsByPetIsEqualToSomething() throws Exception {
+        Pet pet;
         if (TestUtil.findAll(em, Pet.class).isEmpty()) {
             visitRepository.saveAndFlush(visit);
-            pets = PetResourceIT.createEntity(em);
+            pet = PetResourceIT.createEntity(em);
         } else {
-            pets = TestUtil.findAll(em, Pet.class).get(0);
+            pet = TestUtil.findAll(em, Pet.class).get(0);
         }
-        em.persist(pets);
+        em.persist(pet);
         em.flush();
-        visit.setPets(pets);
+        visit.setPet(pet);
         visitRepository.saveAndFlush(visit);
-        Long petsId = pets.getId();
-        // Get all the visitList where pets equals to petsId
-        defaultVisitShouldBeFound("petsId.equals=" + petsId);
+        Long petId = pet.getId();
+        // Get all the visitList where pet equals to petId
+        defaultVisitShouldBeFound("petId.equals=" + petId);
 
-        // Get all the visitList where pets equals to (petsId + 1)
-        defaultVisitShouldNotBeFound("petsId.equals=" + (petsId + 1));
+        // Get all the visitList where pet equals to (petId + 1)
+        defaultVisitShouldNotBeFound("petId.equals=" + (petId + 1));
     }
 
     private void defaultVisitFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
@@ -416,11 +407,12 @@ class VisitResourceIT {
         // Disconnect from session so that the updates on updatedVisit are not directly saved in db
         em.detach(updatedVisit);
         updatedVisit.date(UPDATED_DATE).description(UPDATED_DESCRIPTION);
-        VisitDTO visitDTO = visitMapper.toDto(updatedVisit);
 
         restVisitMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, visitDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(visitDTO))
+                put(ENTITY_API_URL_ID, updatedVisit.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(om.writeValueAsBytes(updatedVisit))
             )
             .andExpect(status().isOk());
 
@@ -435,14 +427,9 @@ class VisitResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         visit.setId(longCount.incrementAndGet());
 
-        // Create the Visit
-        VisitDTO visitDTO = visitMapper.toDto(visit);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restVisitMockMvc
-            .perform(
-                put(ENTITY_API_URL_ID, visitDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(visitDTO))
-            )
+            .perform(put(ENTITY_API_URL_ID, visit.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(visit)))
             .andExpect(status().isBadRequest());
 
         // Validate the Visit in the database
@@ -455,15 +442,12 @@ class VisitResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         visit.setId(longCount.incrementAndGet());
 
-        // Create the Visit
-        VisitDTO visitDTO = visitMapper.toDto(visit);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restVisitMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(visitDTO))
+                    .content(om.writeValueAsBytes(visit))
             )
             .andExpect(status().isBadRequest());
 
@@ -477,12 +461,9 @@ class VisitResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         visit.setId(longCount.incrementAndGet());
 
-        // Create the Visit
-        VisitDTO visitDTO = visitMapper.toDto(visit);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restVisitMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(visitDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(visit)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Visit in the database
@@ -551,15 +532,10 @@ class VisitResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         visit.setId(longCount.incrementAndGet());
 
-        // Create the Visit
-        VisitDTO visitDTO = visitMapper.toDto(visit);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restVisitMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, visitDTO.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(visitDTO))
+                patch(ENTITY_API_URL_ID, visit.getId()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(visit))
             )
             .andExpect(status().isBadRequest());
 
@@ -573,15 +549,12 @@ class VisitResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         visit.setId(longCount.incrementAndGet());
 
-        // Create the Visit
-        VisitDTO visitDTO = visitMapper.toDto(visit);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restVisitMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(visitDTO))
+                    .content(om.writeValueAsBytes(visit))
             )
             .andExpect(status().isBadRequest());
 
@@ -595,12 +568,9 @@ class VisitResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         visit.setId(longCount.incrementAndGet());
 
-        // Create the Visit
-        VisitDTO visitDTO = visitMapper.toDto(visit);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restVisitMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(visitDTO)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(visit)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Visit in the database

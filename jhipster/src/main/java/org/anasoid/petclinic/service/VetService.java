@@ -1,7 +1,7 @@
 package org.anasoid.petclinic.service;
 
 import java.util.Optional;
-import org.anasoid.petclinic.service.dto.VetDTO;
+import org.anasoid.petclinic.domain.Vet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,26 +12,26 @@ public interface VetService {
     /**
      * Save a vet.
      *
-     * @param vetDTO the entity to save.
+     * @param vet the entity to save.
      * @return the persisted entity.
      */
-    VetDTO save(VetDTO vetDTO);
+    Vet save(Vet vet);
 
     /**
      * Updates a vet.
      *
-     * @param vetDTO the entity to update.
+     * @param vet the entity to update.
      * @return the persisted entity.
      */
-    VetDTO update(VetDTO vetDTO);
+    Vet update(Vet vet);
 
     /**
      * Partially updates a vet.
      *
-     * @param vetDTO the entity to update partially.
+     * @param vet the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<VetDTO> partialUpdate(VetDTO vetDTO);
+    Optional<Vet> partialUpdate(Vet vet);
 
     /**
      * Get all the vets with eager load of many-to-many relationships.
@@ -39,7 +39,7 @@ public interface VetService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<VetDTO> findAllWithEagerRelationships(Pageable pageable);
+    Page<Vet> findAllWithEagerRelationships(Pageable pageable);
 
     /**
      * Get the "id" vet.
@@ -47,7 +47,7 @@ public interface VetService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<VetDTO> findOne(Long id);
+    Optional<Vet> findOne(Long id);
 
     /**
      * Delete the "id" vet.

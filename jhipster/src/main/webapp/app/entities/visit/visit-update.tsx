@@ -56,7 +56,7 @@ export const VisitUpdate = () => {
     const entity = {
       ...visitEntity,
       ...values,
-      pets: pets.find(it => it.id.toString() === values.pets?.toString()),
+      pet: pets.find(it => it.id.toString() === values.pet?.toString()),
     };
 
     if (isNew) {
@@ -71,7 +71,7 @@ export const VisitUpdate = () => {
       ? {}
       : {
           ...visitEntity,
-          pets: visitEntity?.pets?.id,
+          pet: visitEntity?.pet?.id,
         };
 
   return (
@@ -101,7 +101,7 @@ export const VisitUpdate = () => {
                 }}
               />
               <ValidatedField label="Description" id="visit-description" name="description" data-cy="description" type="text" />
-              <ValidatedField id="visit-pets" name="pets" data-cy="pets" label="Pets" type="select">
+              <ValidatedField id="visit-pet" name="pet" data-cy="pet" label="Pet" type="select">
                 <option value="" key="0" />
                 {pets
                   ? pets.map(otherEntity => (

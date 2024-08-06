@@ -46,9 +46,6 @@ public class Owner implements Serializable {
     @Column(name = "telephone", nullable = false)
     private Integer telephone;
 
-    @Column(name = "ffff")
-    private String ffff;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "type", "visits", "owner" }, allowSetters = true)
@@ -134,19 +131,6 @@ public class Owner implements Serializable {
         this.telephone = telephone;
     }
 
-    public String getFfff() {
-        return this.ffff;
-    }
-
-    public Owner ffff(String ffff) {
-        this.setFfff(ffff);
-        return this;
-    }
-
-    public void setFfff(String ffff) {
-        this.ffff = ffff;
-    }
-
     public Set<Pet> getPets() {
         return this.pets;
     }
@@ -207,7 +191,6 @@ public class Owner implements Serializable {
             ", address='" + getAddress() + "'" +
             ", city='" + getCity() + "'" +
             ", telephone=" + getTelephone() +
-            ", ffff='" + getFfff() + "'" +
             "}";
     }
 }

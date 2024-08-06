@@ -18,6 +18,7 @@ public class SpaWebFilter extends OncePerRequestFilter {
         // Request URI includes the contextPath if any, removed it.
         String path = request.getRequestURI().substring(request.getContextPath().length());
         if (
+            !path.startsWith("/petclinic") &&
             !path.startsWith("/api") &&
             !path.startsWith("/management") &&
             !path.startsWith("/v3/api-docs") &&

@@ -1,7 +1,7 @@
 package org.anasoid.petclinic.service;
 
 import java.util.Optional;
-import org.anasoid.petclinic.service.dto.VisitDTO;
+import org.anasoid.petclinic.domain.Visit;
 
 /**
  * Service Interface for managing {@link org.anasoid.petclinic.domain.Visit}.
@@ -10,26 +10,26 @@ public interface VisitService {
     /**
      * Save a visit.
      *
-     * @param visitDTO the entity to save.
+     * @param visit the entity to save.
      * @return the persisted entity.
      */
-    VisitDTO save(VisitDTO visitDTO);
+    Visit save(Visit visit);
 
     /**
      * Updates a visit.
      *
-     * @param visitDTO the entity to update.
+     * @param visit the entity to update.
      * @return the persisted entity.
      */
-    VisitDTO update(VisitDTO visitDTO);
+    Visit update(Visit visit);
 
     /**
      * Partially updates a visit.
      *
-     * @param visitDTO the entity to update partially.
+     * @param visit the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<VisitDTO> partialUpdate(VisitDTO visitDTO);
+    Optional<Visit> partialUpdate(Visit visit);
 
     /**
      * Get the "id" visit.
@@ -37,7 +37,7 @@ public interface VisitService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<VisitDTO> findOne(Long id);
+    Optional<Visit> findOne(Long id);
 
     /**
      * Delete the "id" visit.

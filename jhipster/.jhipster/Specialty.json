@@ -2,7 +2,7 @@
   "annotations": {
     "changelogDate": "20240805130746"
   },
-  "dto": "mapstruct",
+  "dto": "no",
   "fields": [
     {
       "fieldName": "name",

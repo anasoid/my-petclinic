@@ -5,7 +5,7 @@ export interface IVisit {
   id?: number;
   date?: dayjs.Dayjs;
   description?: string | null;
-  pets?: IPet | null;
+  pet?: IPet | null;
 }
 
 export const defaultValue: Readonly<IVisit> = {};

@@ -46,19 +46,19 @@ class PetTest {
 
         pet.addVisits(visitBack);
         assertThat(pet.getVisits()).containsOnly(visitBack);
-        assertThat(visitBack.getPets()).isEqualTo(pet);
+        assertThat(visitBack.getPet()).isEqualTo(pet);
 
         pet.removeVisits(visitBack);
         assertThat(pet.getVisits()).doesNotContain(visitBack);
-        assertThat(visitBack.getPets()).isNull();
+        assertThat(visitBack.getPet()).isNull();
 
         pet.visits(new HashSet<>(Set.of(visitBack)));
         assertThat(pet.getVisits()).containsOnly(visitBack);
-        assertThat(visitBack.getPets()).isEqualTo(pet);
+        assertThat(visitBack.getPet()).isEqualTo(pet);
 
         pet.setVisits(new HashSet<>());
         assertThat(pet.getVisits()).doesNotContain(visitBack);
-        assertThat(visitBack.getPets()).isNull();
+        assertThat(visitBack.getPet()).isNull();
     }
 
     @Test

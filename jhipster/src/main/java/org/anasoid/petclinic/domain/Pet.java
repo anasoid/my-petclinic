@@ -36,9 +36,9 @@ public class Pet implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private PetType type;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pets")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "pets" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "pet" }, allowSetters = true)
     private Set<Visit> visits = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -105,10 +105,10 @@ public class Pet implements Serializable {
 
     public void setVisits(Set<Visit> visits) {
         if (this.visits != null) {
-            this.visits.forEach(i -> i.setPets(null));
+            this.visits.forEach(i -> i.setPet(null));
         }
         if (visits != null) {
-            visits.forEach(i -> i.setPets(this));
+            visits.forEach(i -> i.setPet(this));
         }
         this.visits = visits;
     }
@@ -120,13 +120,13 @@ public class Pet implements Serializable {
 
     public Pet addVisits(Visit visit) {
         this.visits.add(visit);
-        visit.setPets(this);
+        visit.setPet(this);
         return this;
     }
 
     public Pet removeVisits(Visit visit) {
         this.visits.remove(visit);
-        visit.setPets(null);
+        visit.setPet(null);
         return this;
     }
 

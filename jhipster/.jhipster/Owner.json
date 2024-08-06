@@ -2,7 +2,7 @@
   "annotations": {
     "changelogDate": "20240805132634"
   },
-  "dto": "mapstruct",
+  "dto": "no",
   "fields": [
     {
       "fieldName": "firstName",
@@ -29,10 +29,6 @@
       "fieldName": "telephone",
       "fieldType": "Integer",
       "fieldValidateRules": ["required"]
-    },
-    {
-      "fieldName": "ffff",
-      "fieldType": "String"
     }
   ],
   "jpaMetamodelFiltering": true,

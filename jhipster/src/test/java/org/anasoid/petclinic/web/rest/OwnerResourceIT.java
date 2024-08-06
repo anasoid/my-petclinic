@@ -14,8 +14,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.anasoid.petclinic.IntegrationTest;
 import org.anasoid.petclinic.domain.Owner;
 import org.anasoid.petclinic.repository.OwnerRepository;
-import org.anasoid.petclinic.service.dto.OwnerDTO;
-import org.anasoid.petclinic.service.mapper.OwnerMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,9 +48,6 @@ class OwnerResourceIT {
     private static final Integer UPDATED_TELEPHONE = 2;
     private static final Integer SMALLER_TELEPHONE = 1 - 1;
 
-    private static final String DEFAULT_FFFF = "AAAAAAAAAA";
-    private static final String UPDATED_FFFF = "BBBBBBBBBB";
-
     private static final String ENTITY_API_URL = "/api/owners";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -64,9 +59,6 @@ class OwnerResourceIT {
 
     @Autowired
     private OwnerRepository ownerRepository;
-
-    @Autowired
-    private OwnerMapper ownerMapper;
 
     @Autowired
     private EntityManager em;
@@ -90,8 +82,7 @@ class OwnerResourceIT {
             .lastName(DEFAULT_LAST_NAME)
             .address(DEFAULT_ADDRESS)
             .city(DEFAULT_CITY)
-            .telephone(DEFAULT_TELEPHONE)
-            .ffff(DEFAULT_FFFF);
+            .telephone(DEFAULT_TELEPHONE);
         return owner;
     }
 
@@ -107,8 +98,7 @@ class OwnerResourceIT {
             .lastName(UPDATED_LAST_NAME)
             .address(UPDATED_ADDRESS)
             .city(UPDATED_CITY)
-            .telephone(UPDATED_TELEPHONE)
-            .ffff(UPDATED_FFFF);
+            .telephone(UPDATED_TELEPHONE);
         return owner;
     }
 
@@ -130,20 +120,18 @@ class OwnerResourceIT {
     void createOwner() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Owner
-        OwnerDTO ownerDTO = ownerMapper.toDto(owner);
-        var returnedOwnerDTO = om.readValue(
+        var returnedOwner = om.readValue(
             restOwnerMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ownerDTO)))
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(owner)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            OwnerDTO.class
+            Owner.class
         );
 
         // Validate the Owner in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedOwner = ownerMapper.toEntity(returnedOwnerDTO);
         assertOwnerUpdatableFieldsEquals(returnedOwner, getPersistedOwner(returnedOwner));
 
         insertedOwner = returnedOwner;
@@ -154,13 +142,12 @@ class OwnerResourceIT {
     void createOwnerWithExistingId() throws Exception {
         // Create the Owner with an existing ID
         owner.setId(1L);
-        OwnerDTO ownerDTO = ownerMapper.toDto(owner);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restOwnerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ownerDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(owner)))
             .andExpect(status().isBadRequest());
 
         // Validate the Owner in the database
@@ -175,10 +162,9 @@ class OwnerResourceIT {
         owner.setFirstName(null);
 
         // Create the Owner, which fails.
-        OwnerDTO ownerDTO = ownerMapper.toDto(owner);
 
         restOwnerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ownerDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(owner)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -192,10 +178,9 @@ class OwnerResourceIT {
         owner.setAddress(null);
 
         // Create the Owner, which fails.
-        OwnerDTO ownerDTO = ownerMapper.toDto(owner);
 
         restOwnerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ownerDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(owner)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -209,10 +194,9 @@ class OwnerResourceIT {
         owner.setCity(null);
 
         // Create the Owner, which fails.
-        OwnerDTO ownerDTO = ownerMapper.toDto(owner);
 
         restOwnerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ownerDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(owner)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -226,10 +210,9 @@ class OwnerResourceIT {
         owner.setTelephone(null);
 
         // Create the Owner, which fails.
-        OwnerDTO ownerDTO = ownerMapper.toDto(owner);
 
         restOwnerMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ownerDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(owner)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -251,8 +234,7 @@ class OwnerResourceIT {
             .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LAST_NAME)))
             .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)))
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
-            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE)))
-            .andExpect(jsonPath("$.[*].ffff").value(hasItem(DEFAULT_FFFF)));
+            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE)));
     }
 
     @Test
@@ -271,8 +253,7 @@ class OwnerResourceIT {
             .andExpect(jsonPath("$.lastName").value(DEFAULT_LAST_NAME))
             .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS))
             .andExpect(jsonPath("$.city").value(DEFAULT_CITY))
-            .andExpect(jsonPath("$.telephone").value(DEFAULT_TELEPHONE))
-            .andExpect(jsonPath("$.ffff").value(DEFAULT_FFFF));
+            .andExpect(jsonPath("$.telephone").value(DEFAULT_TELEPHONE));
     }
 
     @Test
@@ -560,56 +541,6 @@ class OwnerResourceIT {
         defaultOwnerFiltering("telephone.greaterThan=" + SMALLER_TELEPHONE, "telephone.greaterThan=" + DEFAULT_TELEPHONE);
     }
 
-    @Test
-    @Transactional
-    void getAllOwnersByFfffIsEqualToSomething() throws Exception {
-        // Initialize the database
-        insertedOwner = ownerRepository.saveAndFlush(owner);
-
-        // Get all the ownerList where ffff equals to
-        defaultOwnerFiltering("ffff.equals=" + DEFAULT_FFFF, "ffff.equals=" + UPDATED_FFFF);
-    }
-
-    @Test
-    @Transactional
-    void getAllOwnersByFfffIsInShouldWork() throws Exception {
-        // Initialize the database
-        insertedOwner = ownerRepository.saveAndFlush(owner);
-
-        // Get all the ownerList where ffff in
-        defaultOwnerFiltering("ffff.in=" + DEFAULT_FFFF + "," + UPDATED_FFFF, "ffff.in=" + UPDATED_FFFF);
-    }
-
-    @Test
-    @Transactional
-    void getAllOwnersByFfffIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        insertedOwner = ownerRepository.saveAndFlush(owner);
-
-        // Get all the ownerList where ffff is not null
-        defaultOwnerFiltering("ffff.specified=true", "ffff.specified=false");
-    }
-
-    @Test
-    @Transactional
-    void getAllOwnersByFfffContainsSomething() throws Exception {
-        // Initialize the database
-        insertedOwner = ownerRepository.saveAndFlush(owner);
-
-        // Get all the ownerList where ffff contains
-        defaultOwnerFiltering("ffff.contains=" + DEFAULT_FFFF, "ffff.contains=" + UPDATED_FFFF);
-    }
-
-    @Test
-    @Transactional
-    void getAllOwnersByFfffNotContainsSomething() throws Exception {
-        // Initialize the database
-        insertedOwner = ownerRepository.saveAndFlush(owner);
-
-        // Get all the ownerList where ffff does not contain
-        defaultOwnerFiltering("ffff.doesNotContain=" + UPDATED_FFFF, "ffff.doesNotContain=" + DEFAULT_FFFF);
-    }
-
     private void defaultOwnerFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
         defaultOwnerShouldBeFound(shouldBeFound);
         defaultOwnerShouldNotBeFound(shouldNotBeFound);
@@ -628,8 +559,7 @@ class OwnerResourceIT {
             .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LAST_NAME)))
             .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)))
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY)))
-            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE)))
-            .andExpect(jsonPath("$.[*].ffff").value(hasItem(DEFAULT_FFFF)));
+            .andExpect(jsonPath("$.[*].telephone").value(hasItem(DEFAULT_TELEPHONE)));
 
         // Check, that the count call also returns 1
         restOwnerMockMvc
@@ -682,13 +612,13 @@ class OwnerResourceIT {
             .lastName(UPDATED_LAST_NAME)
             .address(UPDATED_ADDRESS)
             .city(UPDATED_CITY)
-            .telephone(UPDATED_TELEPHONE)
-            .ffff(UPDATED_FFFF);
-        OwnerDTO ownerDTO = ownerMapper.toDto(updatedOwner);
+            .telephone(UPDATED_TELEPHONE);
 
         restOwnerMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, ownerDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ownerDTO))
+                put(ENTITY_API_URL_ID, updatedOwner.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(om.writeValueAsBytes(updatedOwner))
             )
             .andExpect(status().isOk());
 
@@ -703,14 +633,9 @@ class OwnerResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         owner.setId(longCount.incrementAndGet());
 
-        // Create the Owner
-        OwnerDTO ownerDTO = ownerMapper.toDto(owner);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restOwnerMockMvc
-            .perform(
-                put(ENTITY_API_URL_ID, ownerDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ownerDTO))
-            )
+            .perform(put(ENTITY_API_URL_ID, owner.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(owner)))
             .andExpect(status().isBadRequest());
 
         // Validate the Owner in the database
@@ -723,15 +648,12 @@ class OwnerResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         owner.setId(longCount.incrementAndGet());
 
-        // Create the Owner
-        OwnerDTO ownerDTO = ownerMapper.toDto(owner);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOwnerMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(ownerDTO))
+                    .content(om.writeValueAsBytes(owner))
             )
             .andExpect(status().isBadRequest());
 
@@ -745,12 +667,9 @@ class OwnerResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         owner.setId(longCount.incrementAndGet());
 
-        // Create the Owner
-        OwnerDTO ownerDTO = ownerMapper.toDto(owner);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOwnerMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ownerDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(owner)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Owner in the database
@@ -769,7 +688,7 @@ class OwnerResourceIT {
         Owner partialUpdatedOwner = new Owner();
         partialUpdatedOwner.setId(owner.getId());
 
-        partialUpdatedOwner.firstName(UPDATED_FIRST_NAME).address(UPDATED_ADDRESS);
+        partialUpdatedOwner.firstName(UPDATED_FIRST_NAME).address(UPDATED_ADDRESS).telephone(UPDATED_TELEPHONE);
 
         restOwnerMockMvc
             .perform(
@@ -802,8 +721,7 @@ class OwnerResourceIT {
             .lastName(UPDATED_LAST_NAME)
             .address(UPDATED_ADDRESS)
             .city(UPDATED_CITY)
-            .telephone(UPDATED_TELEPHONE)
-            .ffff(UPDATED_FFFF);
+            .telephone(UPDATED_TELEPHONE);
 
         restOwnerMockMvc
             .perform(
@@ -825,15 +743,10 @@ class OwnerResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         owner.setId(longCount.incrementAndGet());
 
-        // Create the Owner
-        OwnerDTO ownerDTO = ownerMapper.toDto(owner);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restOwnerMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, ownerDTO.getId())
-                    .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(ownerDTO))
+                patch(ENTITY_API_URL_ID, owner.getId()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(owner))
             )
             .andExpect(status().isBadRequest());
 
@@ -847,15 +760,12 @@ class OwnerResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         owner.setId(longCount.incrementAndGet());
 
-        // Create the Owner
-        OwnerDTO ownerDTO = ownerMapper.toDto(owner);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOwnerMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(ownerDTO))
+                    .content(om.writeValueAsBytes(owner))
             )
             .andExpect(status().isBadRequest());
 
@@ -869,12 +779,9 @@ class OwnerResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         owner.setId(longCount.incrementAndGet());
 
-        // Create the Owner
-        OwnerDTO ownerDTO = ownerMapper.toDto(owner);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restOwnerMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(ownerDTO)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(owner)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Owner in the database

@@ -47,10 +47,6 @@ export const OwnerDetail = () => {
             <span id="telephone">Telephone</span>
           </dt>
           <dd>{ownerEntity.telephone}</dd>
-          <dt>
-            <span id="ffff">Ffff</span>
-          </dt>
-          <dd>{ownerEntity.ffff}</dd>
         </dl>
         <Button tag={Link} to="/owner" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>

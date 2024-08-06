@@ -130,7 +130,6 @@ export const OwnerUpdate = () => {
                   validate: v => isNumber(v) || 'This field should be a number.',
                 }}
               />
-              <ValidatedField label="Ffff" id="owner-ffff" name="ffff" data-cy="ffff" type="text" />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/owner" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

@@ -1,7 +1,7 @@
 package org.anasoid.petclinic.service;
 
 import java.util.Optional;
-import org.anasoid.petclinic.service.dto.PetTypeDTO;
+import org.anasoid.petclinic.domain.PetType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,26 +12,26 @@ public interface PetTypeService {
     /**
      * Save a petType.
      *
-     * @param petTypeDTO the entity to save.
+     * @param petType the entity to save.
      * @return the persisted entity.
      */
-    PetTypeDTO save(PetTypeDTO petTypeDTO);
+    PetType save(PetType petType);
 
     /**
      * Updates a petType.
      *
-     * @param petTypeDTO the entity to update.
+     * @param petType the entity to update.
      * @return the persisted entity.
      */
-    PetTypeDTO update(PetTypeDTO petTypeDTO);
+    PetType update(PetType petType);
 
     /**
      * Partially updates a petType.
      *
-     * @param petTypeDTO the entity to update partially.
+     * @param petType the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<PetTypeDTO> partialUpdate(PetTypeDTO petTypeDTO);
+    Optional<PetType> partialUpdate(PetType petType);
 
     /**
      * Get all the petTypes.
@@ -39,7 +39,7 @@ public interface PetTypeService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<PetTypeDTO> findAll(Pageable pageable);
+    Page<PetType> findAll(Pageable pageable);
 
     /**
      * Get the "id" petType.
@@ -47,7 +47,7 @@ public interface PetTypeService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<PetTypeDTO> findOne(Long id);
+    Optional<PetType> findOne(Long id);
 
     /**
      * Delete the "id" petType.

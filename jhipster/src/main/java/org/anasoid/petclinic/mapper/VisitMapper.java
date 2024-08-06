@@ -1,17 +1,17 @@
 package org.anasoid.petclinic.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.anasoid.petclinic.domain.Visit;
 import org.anasoid.petclinic.service.api.dto.VisitDto;
 import org.anasoid.petclinic.service.api.dto.VisitFieldsDto;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.Collection;
 
 /**
  * Map Visit & VisitDto using mapstruct
  */
-@Mapper(uses = PetMapper.class)
+@Mapper(uses = PetMapper.class, componentModel = "spring")
 public interface VisitMapper {
     Visit toVisit(VisitDto visitDto);
 

@@ -60,6 +60,6 @@ public class VisitAsserts {
     public static void assertVisitUpdatableRelationshipsEquals(Visit expected, Visit actual) {
         assertThat(expected)
             .as("Verify Visit relationships")
-            .satisfies(e -> assertThat(e.getPets()).as("check pets").isEqualTo(actual.getPets()));
+            .satisfies(e -> assertThat(e.getPet()).as("check pet").isEqualTo(actual.getPet()));
     }
 }

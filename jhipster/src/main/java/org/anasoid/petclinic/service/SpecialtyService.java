@@ -1,7 +1,7 @@
 package org.anasoid.petclinic.service;
 
 import java.util.Optional;
-import org.anasoid.petclinic.service.dto.SpecialtyDTO;
+import org.anasoid.petclinic.domain.Specialty;
 
 /**
  * Service Interface for managing {@link org.anasoid.petclinic.domain.Specialty}.
@@ -10,26 +10,26 @@ public interface SpecialtyService {
     /**
      * Save a specialty.
      *
-     * @param specialtyDTO the entity to save.
+     * @param specialty the entity to save.
      * @return the persisted entity.
      */
-    SpecialtyDTO save(SpecialtyDTO specialtyDTO);
+    Specialty save(Specialty specialty);
 
     /**
      * Updates a specialty.
      *
-     * @param specialtyDTO the entity to update.
+     * @param specialty the entity to update.
      * @return the persisted entity.
      */
-    SpecialtyDTO update(SpecialtyDTO specialtyDTO);
+    Specialty update(Specialty specialty);
 
     /**
      * Partially updates a specialty.
      *
-     * @param specialtyDTO the entity to update partially.
+     * @param specialty the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<SpecialtyDTO> partialUpdate(SpecialtyDTO specialtyDTO);
+    Optional<Specialty> partialUpdate(Specialty specialty);
 
     /**
      * Get the "id" specialty.
@@ -37,7 +37,7 @@ public interface SpecialtyService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<SpecialtyDTO> findOne(Long id);
+    Optional<Specialty> findOne(Long id);
 
     /**
      * Delete the "id" specialty.

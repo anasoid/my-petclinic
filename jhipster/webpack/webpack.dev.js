@@ -53,7 +53,7 @@ module.exports = async options =>
       port: 9060,
       proxy: [
         {
-          context: ['/api', '/services', '/management', '/v3/api-docs', '/h2-console'],
+          context: ['/petclinic','/api', '/services', '/management', '/v3/api-docs', '/h2-console'],
           target: `http${options.tls ? 's' : ''}://localhost:8080`,
           secure: false,
           changeOrigin: options.tls,

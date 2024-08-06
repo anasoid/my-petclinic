@@ -2,7 +2,7 @@
   "annotations": {
     "changelogDate": "20240805131609"
   },
-  "dto": "mapstruct",
+  "dto": "no",
   "fields": [
     {
       "fieldName": "name",
@@ -29,7 +29,7 @@
     {
       "otherEntityField": "id",
       "otherEntityName": "visit",
-      "otherEntityRelationshipName": "pets",
+      "otherEntityRelationshipName": "pet",
       "relationshipName": "visits",
       "relationshipSide": "left",
       "relationshipType": "one-to-many"

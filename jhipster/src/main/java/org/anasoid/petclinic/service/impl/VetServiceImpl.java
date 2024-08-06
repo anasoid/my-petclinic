@@ -4,8 +4,6 @@ import java.util.Optional;
 import org.anasoid.petclinic.domain.Vet;
 import org.anasoid.petclinic.repository.VetRepository;
 import org.anasoid.petclinic.service.VetService;
-import org.anasoid.petclinic.service.dto.VetDTO;
-import org.anasoid.petclinic.service.mapper.VetMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,53 +22,50 @@ public class VetServiceImpl implements VetService {
 
     private final VetRepository vetRepository;
 
-    private final VetMapper vetMapper;
-
-    public VetServiceImpl(VetRepository vetRepository, VetMapper vetMapper) {
+    public VetServiceImpl(VetRepository vetRepository) {
         this.vetRepository = vetRepository;
-        this.vetMapper = vetMapper;
     }
 
     @Override
-    public VetDTO save(VetDTO vetDTO) {
-        log.debug("Request to save Vet : {}", vetDTO);
-        Vet vet = vetMapper.toEntity(vetDTO);
-        vet = vetRepository.save(vet);
-        return vetMapper.toDto(vet);
+    public Vet save(Vet vet) {
+        log.debug("Request to save Vet : {}", vet);
+        return vetRepository.save(vet);
     }
 
     @Override
-    public VetDTO update(VetDTO vetDTO) {
-        log.debug("Request to update Vet : {}", vetDTO);
-        Vet vet = vetMapper.toEntity(vetDTO);
-        vet = vetRepository.save(vet);
-        return vetMapper.toDto(vet);
+    public Vet update(Vet vet) {
+        log.debug("Request to update Vet : {}", vet);
+        return vetRepository.save(vet);
     }
 
     @Override
-    public Optional<VetDTO> partialUpdate(VetDTO vetDTO) {
-        log.debug("Request to partially update Vet : {}", vetDTO);
+    public Optional<Vet> partialUpdate(Vet vet) {
+        log.debug("Request to partially update Vet : {}", vet);
 
         return vetRepository
-            .findById(vetDTO.getId())
+            .findById(vet.getId())
             .map(existingVet -> {
-                vetMapper.partialUpdate(existingVet, vetDTO);
+                if (vet.getFirstName() != null) {
+                    existingVet.setFirstName(vet.getFirstName());
+                }
+                if (vet.getLastName() != null) {
+                    existingVet.setLastName(vet.getLastName());
+                }
 
                 return existingVet;
             })
-            .map(vetRepository::save)
-            .map(vetMapper::toDto);
+            .map(vetRepository::save);
     }
 
-    public Page<VetDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return vetRepository.findAllWithEagerRelationships(pageable).map(vetMapper::toDto);
+    public Page<Vet> findAllWithEagerRelationships(Pageable pageable) {
+        return vetRepository.findAllWithEagerRelationships(pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<VetDTO> findOne(Long id) {
+    public Optional<Vet> findOne(Long id) {
         log.debug("Request to get Vet : {}", id);
-        return vetRepository.findOneWithEagerRelationships(id).map(vetMapper::toDto);
+        return vetRepository.findOneWithEagerRelationships(id);
     }
 
     @Override

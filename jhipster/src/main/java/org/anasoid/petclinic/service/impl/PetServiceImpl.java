@@ -4,8 +4,6 @@ import java.util.Optional;
 import org.anasoid.petclinic.domain.Pet;
 import org.anasoid.petclinic.repository.PetRepository;
 import org.anasoid.petclinic.service.PetService;
-import org.anasoid.petclinic.service.dto.PetDTO;
-import org.anasoid.petclinic.service.mapper.PetMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,53 +22,50 @@ public class PetServiceImpl implements PetService {
 
     private final PetRepository petRepository;
 
-    private final PetMapper petMapper;
-
-    public PetServiceImpl(PetRepository petRepository, PetMapper petMapper) {
+    public PetServiceImpl(PetRepository petRepository) {
         this.petRepository = petRepository;
-        this.petMapper = petMapper;
     }
 
     @Override
-    public PetDTO save(PetDTO petDTO) {
-        log.debug("Request to save Pet : {}", petDTO);
-        Pet pet = petMapper.toEntity(petDTO);
-        pet = petRepository.save(pet);
-        return petMapper.toDto(pet);
+    public Pet save(Pet pet) {
+        log.debug("Request to save Pet : {}", pet);
+        return petRepository.save(pet);
     }
 
     @Override
-    public PetDTO update(PetDTO petDTO) {
-        log.debug("Request to update Pet : {}", petDTO);
-        Pet pet = petMapper.toEntity(petDTO);
-        pet = petRepository.save(pet);
-        return petMapper.toDto(pet);
+    public Pet update(Pet pet) {
+        log.debug("Request to update Pet : {}", pet);
+        return petRepository.save(pet);
     }
 
     @Override
-    public Optional<PetDTO> partialUpdate(PetDTO petDTO) {
-        log.debug("Request to partially update Pet : {}", petDTO);
+    public Optional<Pet> partialUpdate(Pet pet) {
+        log.debug("Request to partially update Pet : {}", pet);
 
         return petRepository
-            .findById(petDTO.getId())
+            .findById(pet.getId())
             .map(existingPet -> {
-                petMapper.partialUpdate(existingPet, petDTO);
+                if (pet.getName() != null) {
+                    existingPet.setName(pet.getName());
+                }
+                if (pet.getBirthDate() != null) {
+                    existingPet.setBirthDate(pet.getBirthDate());
+                }
 
                 return existingPet;
             })
-            .map(petRepository::save)
-            .map(petMapper::toDto);
+            .map(petRepository::save);
     }
 
-    public Page<PetDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return petRepository.findAllWithEagerRelationships(pageable).map(petMapper::toDto);
+    public Page<Pet> findAllWithEagerRelationships(Pageable pageable) {
+        return petRepository.findAllWithEagerRelationships(pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<PetDTO> findOne(Long id) {
+    public Optional<Pet> findOne(Long id) {
         log.debug("Request to get Pet : {}", id);
-        return petRepository.findOneWithEagerRelationships(id).map(petMapper::toDto);
+        return petRepository.findOneWithEagerRelationships(id);
     }
 
     @Override

@@ -126,9 +126,6 @@ export const Owner = () => {
                 <th className="hand" onClick={sort('telephone')}>
                   Telephone <FontAwesomeIcon icon={getSortIconByFieldName('telephone')} />
                 </th>
-                <th className="hand" onClick={sort('ffff')}>
-                  Ffff <FontAwesomeIcon icon={getSortIconByFieldName('ffff')} />
-                </th>
                 <th />
               </tr>
             </thead>
@@ -145,7 +142,6 @@ export const Owner = () => {
                   <td>{owner.address}</td>
                   <td>{owner.city}</td>
                   <td>{owner.telephone}</td>
-                  <td>{owner.ffff}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/owner/${owner.id}`} color="info" size="sm" data-cy="entityDetailsButton">

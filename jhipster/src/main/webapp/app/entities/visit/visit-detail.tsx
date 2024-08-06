@@ -36,8 +36,8 @@ export const VisitDetail = () => {
             <span id="description">Description</span>
           </dt>
           <dd>{visitEntity.description}</dd>
-          <dt>Pets</dt>
-          <dd>{visitEntity.pets ? visitEntity.pets.id : ''}</dd>
+          <dt>Pet</dt>
+          <dd>{visitEntity.pet ? visitEntity.pet.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/visit" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>

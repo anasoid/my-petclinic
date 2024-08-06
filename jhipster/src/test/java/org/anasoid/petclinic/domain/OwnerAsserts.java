@@ -51,8 +51,7 @@ public class OwnerAsserts {
             .satisfies(e -> assertThat(e.getLastName()).as("check lastName").isEqualTo(actual.getLastName()))
             .satisfies(e -> assertThat(e.getAddress()).as("check address").isEqualTo(actual.getAddress()))
             .satisfies(e -> assertThat(e.getCity()).as("check city").isEqualTo(actual.getCity()))
-            .satisfies(e -> assertThat(e.getTelephone()).as("check telephone").isEqualTo(actual.getTelephone()))
-            .satisfies(e -> assertThat(e.getFfff()).as("check ffff").isEqualTo(actual.getFfff()));
+            .satisfies(e -> assertThat(e.getTelephone()).as("check telephone").isEqualTo(actual.getTelephone()));
     }
 
     /**

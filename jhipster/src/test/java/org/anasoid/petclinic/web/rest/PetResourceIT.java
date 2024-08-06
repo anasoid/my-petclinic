@@ -21,8 +21,6 @@ import org.anasoid.petclinic.domain.Pet;
 import org.anasoid.petclinic.domain.PetType;
 import org.anasoid.petclinic.repository.PetRepository;
 import org.anasoid.petclinic.service.PetService;
-import org.anasoid.petclinic.service.dto.PetDTO;
-import org.anasoid.petclinic.service.mapper.PetMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,9 +66,6 @@ class PetResourceIT {
 
     @Mock
     private PetRepository petRepositoryMock;
-
-    @Autowired
-    private PetMapper petMapper;
 
     @Mock
     private PetService petServiceMock;
@@ -125,20 +120,18 @@ class PetResourceIT {
     void createPet() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Pet
-        PetDTO petDTO = petMapper.toDto(pet);
-        var returnedPetDTO = om.readValue(
+        var returnedPet = om.readValue(
             restPetMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(petDTO)))
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(pet)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            PetDTO.class
+            Pet.class
         );
 
         // Validate the Pet in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
-        var returnedPet = petMapper.toEntity(returnedPetDTO);
         assertPetUpdatableFieldsEquals(returnedPet, getPersistedPet(returnedPet));
 
         insertedPet = returnedPet;
@@ -149,13 +142,12 @@ class PetResourceIT {
     void createPetWithExistingId() throws Exception {
         // Create the Pet with an existing ID
         pet.setId(1L);
-        PetDTO petDTO = petMapper.toDto(pet);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restPetMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(petDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(pet)))
             .andExpect(status().isBadRequest());
 
         // Validate the Pet in the database
@@ -170,10 +162,9 @@ class PetResourceIT {
         pet.setName(null);
 
         // Create the Pet, which fails.
-        PetDTO petDTO = petMapper.toDto(pet);
 
         restPetMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(petDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(pet)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -471,10 +462,11 @@ class PetResourceIT {
         // Disconnect from session so that the updates on updatedPet are not directly saved in db
         em.detach(updatedPet);
         updatedPet.name(UPDATED_NAME).birthDate(UPDATED_BIRTH_DATE);
-        PetDTO petDTO = petMapper.toDto(updatedPet);
 
         restPetMockMvc
-            .perform(put(ENTITY_API_URL_ID, petDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(petDTO)))
+            .perform(
+                put(ENTITY_API_URL_ID, updatedPet.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(updatedPet))
+            )
             .andExpect(status().isOk());
 
         // Validate the Pet in the database
@@ -488,12 +480,9 @@ class PetResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         pet.setId(longCount.incrementAndGet());
 
-        // Create the Pet
-        PetDTO petDTO = petMapper.toDto(pet);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restPetMockMvc
-            .perform(put(ENTITY_API_URL_ID, petDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(petDTO)))
+            .perform(put(ENTITY_API_URL_ID, pet.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(pet)))
             .andExpect(status().isBadRequest());
 
         // Validate the Pet in the database
@@ -506,15 +495,12 @@ class PetResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         pet.setId(longCount.incrementAndGet());
 
-        // Create the Pet
-        PetDTO petDTO = petMapper.toDto(pet);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restPetMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(petDTO))
+                    .content(om.writeValueAsBytes(pet))
             )
             .andExpect(status().isBadRequest());
 
@@ -528,12 +514,9 @@ class PetResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         pet.setId(longCount.incrementAndGet());
 
-        // Create the Pet
-        PetDTO petDTO = petMapper.toDto(pet);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restPetMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(petDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(pet)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Pet in the database
@@ -600,14 +583,9 @@ class PetResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         pet.setId(longCount.incrementAndGet());
 
-        // Create the Pet
-        PetDTO petDTO = petMapper.toDto(pet);
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restPetMockMvc
-            .perform(
-                patch(ENTITY_API_URL_ID, petDTO.getId()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(petDTO))
-            )
+            .perform(patch(ENTITY_API_URL_ID, pet.getId()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(pet)))
             .andExpect(status().isBadRequest());
 
         // Validate the Pet in the database
@@ -620,15 +598,12 @@ class PetResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         pet.setId(longCount.incrementAndGet());
 
-        // Create the Pet
-        PetDTO petDTO = petMapper.toDto(pet);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restPetMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(petDTO))
+                    .content(om.writeValueAsBytes(pet))
             )
             .andExpect(status().isBadRequest());
 
@@ -642,12 +617,9 @@ class PetResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         pet.setId(longCount.incrementAndGet());
 
-        // Create the Pet
-        PetDTO petDTO = petMapper.toDto(pet);
-
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restPetMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(petDTO)))
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(pet)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Pet in the database

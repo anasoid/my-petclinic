@@ -119,7 +119,7 @@ export const Visit = () => {
                   Description <FontAwesomeIcon icon={getSortIconByFieldName('description')} />
                 </th>
                 <th>
-                  Pets <FontAwesomeIcon icon="sort" />
+                  Pet <FontAwesomeIcon icon="sort" />
                 </th>
                 <th />
               </tr>
@@ -134,7 +134,7 @@ export const Visit = () => {
                   </td>
                   <td>{visit.date ? <TextFormat type="date" value={visit.date} format={APP_LOCAL_DATE_FORMAT} /> : null}</td>
                   <td>{visit.description}</td>
-                  <td>{visit.pets ? <Link to={`/pet/${visit.pets.id}`}>{visit.pets.id}</Link> : ''}</td>
+                  <td>{visit.pet ? <Link to={`/pet/${visit.pet.id}`}>{visit.pet.id}</Link> : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/visit/${visit.id}`} color="info" size="sm" data-cy="entityDetailsButton">

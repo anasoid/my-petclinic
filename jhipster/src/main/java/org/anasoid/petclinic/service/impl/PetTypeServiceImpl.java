@@ -4,8 +4,6 @@ import java.util.Optional;
 import org.anasoid.petclinic.domain.PetType;
 import org.anasoid.petclinic.repository.PetTypeRepository;
 import org.anasoid.petclinic.service.PetTypeService;
-import org.anasoid.petclinic.service.dto.PetTypeDTO;
-import org.anasoid.petclinic.service.mapper.PetTypeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,56 +22,50 @@ public class PetTypeServiceImpl implements PetTypeService {
 
     private final PetTypeRepository petTypeRepository;
 
-    private final PetTypeMapper petTypeMapper;
-
-    public PetTypeServiceImpl(PetTypeRepository petTypeRepository, PetTypeMapper petTypeMapper) {
+    public PetTypeServiceImpl(PetTypeRepository petTypeRepository) {
         this.petTypeRepository = petTypeRepository;
-        this.petTypeMapper = petTypeMapper;
     }
 
     @Override
-    public PetTypeDTO save(PetTypeDTO petTypeDTO) {
-        log.debug("Request to save PetType : {}", petTypeDTO);
-        PetType petType = petTypeMapper.toEntity(petTypeDTO);
-        petType = petTypeRepository.save(petType);
-        return petTypeMapper.toDto(petType);
+    public PetType save(PetType petType) {
+        log.debug("Request to save PetType : {}", petType);
+        return petTypeRepository.save(petType);
     }
 
     @Override
-    public PetTypeDTO update(PetTypeDTO petTypeDTO) {
-        log.debug("Request to update PetType : {}", petTypeDTO);
-        PetType petType = petTypeMapper.toEntity(petTypeDTO);
-        petType = petTypeRepository.save(petType);
-        return petTypeMapper.toDto(petType);
+    public PetType update(PetType petType) {
+        log.debug("Request to update PetType : {}", petType);
+        return petTypeRepository.save(petType);
     }
 
     @Override
-    public Optional<PetTypeDTO> partialUpdate(PetTypeDTO petTypeDTO) {
-        log.debug("Request to partially update PetType : {}", petTypeDTO);
+    public Optional<PetType> partialUpdate(PetType petType) {
+        log.debug("Request to partially update PetType : {}", petType);
 
         return petTypeRepository
-            .findById(petTypeDTO.getId())
+            .findById(petType.getId())
             .map(existingPetType -> {
-                petTypeMapper.partialUpdate(existingPetType, petTypeDTO);
+                if (petType.getName() != null) {
+                    existingPetType.setName(petType.getName());
+                }
 
                 return existingPetType;
             })
-            .map(petTypeRepository::save)
-            .map(petTypeMapper::toDto);
+            .map(petTypeRepository::save);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<PetTypeDTO> findAll(Pageable pageable) {
+    public Page<PetType> findAll(Pageable pageable) {
         log.debug("Request to get all PetTypes");
-        return petTypeRepository.findAll(pageable).map(petTypeMapper::toDto);
+        return petTypeRepository.findAll(pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<PetTypeDTO> findOne(Long id) {
+    public Optional<PetType> findOne(Long id) {
         log.debug("Request to get PetType : {}", id);
-        return petTypeRepository.findById(id).map(petTypeMapper::toDto);
+        return petTypeRepository.findById(id);
     }
 
     @Override

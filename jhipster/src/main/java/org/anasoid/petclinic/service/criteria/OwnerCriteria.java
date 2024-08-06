@@ -34,8 +34,6 @@ public class OwnerCriteria implements Serializable, Criteria {
 
     private IntegerFilter telephone;
 
-    private StringFilter ffff;
-
     private LongFilter petsId;
 
     private Boolean distinct;
@@ -49,7 +47,6 @@ public class OwnerCriteria implements Serializable, Criteria {
         this.address = other.optionalAddress().map(StringFilter::copy).orElse(null);
         this.city = other.optionalCity().map(StringFilter::copy).orElse(null);
         this.telephone = other.optionalTelephone().map(IntegerFilter::copy).orElse(null);
-        this.ffff = other.optionalFfff().map(StringFilter::copy).orElse(null);
         this.petsId = other.optionalPetsId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
@@ -173,25 +170,6 @@ public class OwnerCriteria implements Serializable, Criteria {
         this.telephone = telephone;
     }
 
-    public StringFilter getFfff() {
-        return ffff;
-    }
-
-    public Optional<StringFilter> optionalFfff() {
-        return Optional.ofNullable(ffff);
-    }
-
-    public StringFilter ffff() {
-        if (ffff == null) {
-            setFfff(new StringFilter());
-        }
-        return ffff;
-    }
-
-    public void setFfff(StringFilter ffff) {
-        this.ffff = ffff;
-    }
-
     public LongFilter getPetsId() {
         return petsId;
     }
@@ -246,7 +224,6 @@ public class OwnerCriteria implements Serializable, Criteria {
             Objects.equals(address, that.address) &&
             Objects.equals(city, that.city) &&
             Objects.equals(telephone, that.telephone) &&
-            Objects.equals(ffff, that.ffff) &&
             Objects.equals(petsId, that.petsId) &&
             Objects.equals(distinct, that.distinct)
         );
@@ -254,7 +231,7 @@ public class OwnerCriteria implements Serializable, Criteria {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, address, city, telephone, ffff, petsId, distinct);
+        return Objects.hash(id, firstName, lastName, address, city, telephone, petsId, distinct);
     }
 
     // prettier-ignore
@@ -267,7 +244,6 @@ public class OwnerCriteria implements Serializable, Criteria {
             optionalAddress().map(f -> "address=" + f + ", ").orElse("") +
             optionalCity().map(f -> "city=" + f + ", ").orElse("") +
             optionalTelephone().map(f -> "telephone=" + f + ", ").orElse("") +
-            optionalFfff().map(f -> "ffff=" + f + ", ").orElse("") +
             optionalPetsId().map(f -> "petsId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";

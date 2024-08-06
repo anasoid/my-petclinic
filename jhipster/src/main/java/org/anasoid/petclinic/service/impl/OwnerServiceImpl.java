@@ -4,8 +4,6 @@ import java.util.Optional;
 import org.anasoid.petclinic.domain.Owner;
 import org.anasoid.petclinic.repository.OwnerRepository;
 import org.anasoid.petclinic.service.OwnerService;
-import org.anasoid.petclinic.service.dto.OwnerDTO;
-import org.anasoid.petclinic.service.mapper.OwnerMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,49 +20,55 @@ public class OwnerServiceImpl implements OwnerService {
 
     private final OwnerRepository ownerRepository;
 
-    private final OwnerMapper ownerMapper;
-
-    public OwnerServiceImpl(OwnerRepository ownerRepository, OwnerMapper ownerMapper) {
+    public OwnerServiceImpl(OwnerRepository ownerRepository) {
         this.ownerRepository = ownerRepository;
-        this.ownerMapper = ownerMapper;
     }
 
     @Override
-    public OwnerDTO save(OwnerDTO ownerDTO) {
-        log.debug("Request to save Owner : {}", ownerDTO);
-        Owner owner = ownerMapper.toEntity(ownerDTO);
-        owner = ownerRepository.save(owner);
-        return ownerMapper.toDto(owner);
+    public Owner save(Owner owner) {
+        log.debug("Request to save Owner : {}", owner);
+        return ownerRepository.save(owner);
     }
 
     @Override
-    public OwnerDTO update(OwnerDTO ownerDTO) {
-        log.debug("Request to update Owner : {}", ownerDTO);
-        Owner owner = ownerMapper.toEntity(ownerDTO);
-        owner = ownerRepository.save(owner);
-        return ownerMapper.toDto(owner);
+    public Owner update(Owner owner) {
+        log.debug("Request to update Owner : {}", owner);
+        return ownerRepository.save(owner);
     }
 
     @Override
-    public Optional<OwnerDTO> partialUpdate(OwnerDTO ownerDTO) {
-        log.debug("Request to partially update Owner : {}", ownerDTO);
+    public Optional<Owner> partialUpdate(Owner owner) {
+        log.debug("Request to partially update Owner : {}", owner);
 
         return ownerRepository
-            .findById(ownerDTO.getId())
+            .findById(owner.getId())
             .map(existingOwner -> {
-                ownerMapper.partialUpdate(existingOwner, ownerDTO);
+                if (owner.getFirstName() != null) {
+                    existingOwner.setFirstName(owner.getFirstName());
+                }
+                if (owner.getLastName() != null) {
+                    existingOwner.setLastName(owner.getLastName());
+                }
+                if (owner.getAddress() != null) {
+                    existingOwner.setAddress(owner.getAddress());
+                }
+                if (owner.getCity() != null) {
+                    existingOwner.setCity(owner.getCity());
+                }
+                if (owner.getTelephone() != null) {
+                    existingOwner.setTelephone(owner.getTelephone());
+                }
 
                 return existingOwner;
             })
-            .map(ownerRepository::save)
-            .map(ownerMapper::toDto);
+            .map(ownerRepository::save);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<OwnerDTO> findOne(Long id) {
+    public Optional<Owner> findOne(Long id) {
         log.debug("Request to get Owner : {}", id);
-        return ownerRepository.findById(id).map(ownerMapper::toDto);
+        return ownerRepository.findById(id);
     }
 
     @Override

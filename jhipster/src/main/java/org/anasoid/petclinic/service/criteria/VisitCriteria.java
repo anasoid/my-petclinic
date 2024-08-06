@@ -28,7 +28,7 @@ public class VisitCriteria implements Serializable, Criteria {
 
     private StringFilter description;
 
-    private LongFilter petsId;
+    private LongFilter petId;
 
     private Boolean distinct;
 
@@ -38,7 +38,7 @@ public class VisitCriteria implements Serializable, Criteria {
         this.id = other.optionalId().map(LongFilter::copy).orElse(null);
         this.date = other.optionalDate().map(LocalDateFilter::copy).orElse(null);
         this.description = other.optionalDescription().map(StringFilter::copy).orElse(null);
-        this.petsId = other.optionalPetsId().map(LongFilter::copy).orElse(null);
+        this.petId = other.optionalPetId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
 
@@ -104,23 +104,23 @@ public class VisitCriteria implements Serializable, Criteria {
         this.description = description;
     }
 
-    public LongFilter getPetsId() {
-        return petsId;
+    public LongFilter getPetId() {
+        return petId;
     }
 
-    public Optional<LongFilter> optionalPetsId() {
-        return Optional.ofNullable(petsId);
+    public Optional<LongFilter> optionalPetId() {
+        return Optional.ofNullable(petId);
     }
 
-    public LongFilter petsId() {
-        if (petsId == null) {
-            setPetsId(new LongFilter());
+    public LongFilter petId() {
+        if (petId == null) {
+            setPetId(new LongFilter());
         }
-        return petsId;
+        return petId;
     }
 
-    public void setPetsId(LongFilter petsId) {
-        this.petsId = petsId;
+    public void setPetId(LongFilter petId) {
+        this.petId = petId;
     }
 
     public Boolean getDistinct() {
@@ -155,14 +155,14 @@ public class VisitCriteria implements Serializable, Criteria {
             Objects.equals(id, that.id) &&
             Objects.equals(date, that.date) &&
             Objects.equals(description, that.description) &&
-            Objects.equals(petsId, that.petsId) &&
+            Objects.equals(petId, that.petId) &&
             Objects.equals(distinct, that.distinct)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, description, petsId, distinct);
+        return Objects.hash(id, date, description, petId, distinct);
     }
 
     // prettier-ignore
@@ -172,7 +172,7 @@ public class VisitCriteria implements Serializable, Criteria {
             optionalId().map(f -> "id=" + f + ", ").orElse("") +
             optionalDate().map(f -> "date=" + f + ", ").orElse("") +
             optionalDescription().map(f -> "description=" + f + ", ").orElse("") +
-            optionalPetsId().map(f -> "petsId=" + f + ", ").orElse("") +
+            optionalPetId().map(f -> "petId=" + f + ", ").orElse("") +
             optionalDistinct().map(f -> "distinct=" + f + ", ").orElse("") +
         "}";
     }

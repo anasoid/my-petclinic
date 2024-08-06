@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Maps Owner & OwnerDto using Mapstruct
  */
-@Mapper(uses = PetMapper.class)
+@Mapper(uses = PetMapper.class, componentModel = "spring")
 public interface OwnerMapper {
 
     OwnerDto toOwnerDto(Owner owner);

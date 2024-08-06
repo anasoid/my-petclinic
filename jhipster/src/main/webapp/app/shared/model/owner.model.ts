@@ -5,7 +5,6 @@ export interface IOwner {
   address?: string;
   city?: string;
   telephone?: number;
-  ffff?: string | null;
 }
 
 export const defaultValue: Readonly<IOwner> = {};

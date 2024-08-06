@@ -13,7 +13,7 @@ import java.util.Collection;
 /**
  * Map Pet & PetDto using mapstruct
  */
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PetMapper {
 
     @Mapping(source = "owner.id", target = "ownerId")

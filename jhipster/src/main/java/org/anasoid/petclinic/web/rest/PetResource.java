@@ -7,11 +7,11 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import org.anasoid.petclinic.domain.Pet;
 import org.anasoid.petclinic.repository.PetRepository;
 import org.anasoid.petclinic.service.PetQueryService;
 import org.anasoid.petclinic.service.PetService;
 import org.anasoid.petclinic.service.criteria.PetCriteria;
-import org.anasoid.petclinic.service.dto.PetDTO;
 import org.anasoid.petclinic.web.rest.errors.BadRequestAlertException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,40 +55,40 @@ public class PetResource {
     /**
      * {@code POST  /pets} : Create a new pet.
      *
-     * @param petDTO the petDTO to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new petDTO, or with status {@code 400 (Bad Request)} if the pet has already an ID.
+     * @param pet the pet to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new pet, or with status {@code 400 (Bad Request)} if the pet has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<PetDTO> createPet(@Valid @RequestBody PetDTO petDTO) throws URISyntaxException {
-        log.debug("REST request to save Pet : {}", petDTO);
-        if (petDTO.getId() != null) {
+    public ResponseEntity<Pet> createPet(@Valid @RequestBody Pet pet) throws URISyntaxException {
+        log.debug("REST request to save Pet : {}", pet);
+        if (pet.getId() != null) {
             throw new BadRequestAlertException("A new pet cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        petDTO = petService.save(petDTO);
-        return ResponseEntity.created(new URI("/api/pets/" + petDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, petDTO.getId().toString()))
-            .body(petDTO);
+        pet = petService.save(pet);
+        return ResponseEntity.created(new URI("/api/pets/" + pet.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, pet.getId().toString()))
+            .body(pet);
     }
 
     /**
      * {@code PUT  /pets/:id} : Updates an existing pet.
      *
-     * @param id the id of the petDTO to save.
-     * @param petDTO the petDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated petDTO,
-     * or with status {@code 400 (Bad Request)} if the petDTO is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the petDTO couldn't be updated.
+     * @param id the id of the pet to save.
+     * @param pet the pet to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated pet,
+     * or with status {@code 400 (Bad Request)} if the pet is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the pet couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<PetDTO> updatePet(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody PetDTO petDTO)
+    public ResponseEntity<Pet> updatePet(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody Pet pet)
         throws URISyntaxException {
-        log.debug("REST request to update Pet : {}, {}", id, petDTO);
-        if (petDTO.getId() == null) {
+        log.debug("REST request to update Pet : {}, {}", id, pet);
+        if (pet.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, petDTO.getId())) {
+        if (!Objects.equals(id, pet.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -96,33 +96,31 @@ public class PetResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        petDTO = petService.update(petDTO);
+        pet = petService.update(pet);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, petDTO.getId().toString()))
-            .body(petDTO);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, pet.getId().toString()))
+            .body(pet);
     }
 
     /**
      * {@code PATCH  /pets/:id} : Partial updates given fields of an existing pet, field will ignore if it is null
      *
-     * @param id the id of the petDTO to save.
-     * @param petDTO the petDTO to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated petDTO,
-     * or with status {@code 400 (Bad Request)} if the petDTO is not valid,
-     * or with status {@code 404 (Not Found)} if the petDTO is not found,
-     * or with status {@code 500 (Internal Server Error)} if the petDTO couldn't be updated.
+     * @param id the id of the pet to save.
+     * @param pet the pet to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated pet,
+     * or with status {@code 400 (Bad Request)} if the pet is not valid,
+     * or with status {@code 404 (Not Found)} if the pet is not found,
+     * or with status {@code 500 (Internal Server Error)} if the pet couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<PetDTO> partialUpdatePet(
-        @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody PetDTO petDTO
-    ) throws URISyntaxException {
-        log.debug("REST request to partial update Pet partially : {}, {}", id, petDTO);
-        if (petDTO.getId() == null) {
+    public ResponseEntity<Pet> partialUpdatePet(@PathVariable(value = "id", required = false) final Long id, @NotNull @RequestBody Pet pet)
+        throws URISyntaxException {
+        log.debug("REST request to partial update Pet partially : {}, {}", id, pet);
+        if (pet.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, petDTO.getId())) {
+        if (!Objects.equals(id, pet.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -130,11 +128,11 @@ public class PetResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<PetDTO> result = petService.partialUpdate(petDTO);
+        Optional<Pet> result = petService.partialUpdate(pet);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, petDTO.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, pet.getId().toString())
         );
     }
 
@@ -146,13 +144,10 @@ public class PetResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of pets in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<PetDTO>> getAllPets(
-        PetCriteria criteria,
-        @org.springdoc.core.annotations.ParameterObject Pageable pageable
-    ) {
+    public ResponseEntity<List<Pet>> getAllPets(PetCriteria criteria, @org.springdoc.core.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get Pets by criteria: {}", criteria);
 
-        Page<PetDTO> page = petQueryService.findByCriteria(criteria, pageable);
+        Page<Pet> page = petQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -172,20 +167,20 @@ public class PetResource {
     /**
      * {@code GET  /pets/:id} : get the "id" pet.
      *
-     * @param id the id of the petDTO to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the petDTO, or with status {@code 404 (Not Found)}.
+     * @param id the id of the pet to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the pet, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<PetDTO> getPet(@PathVariable("id") Long id) {
+    public ResponseEntity<Pet> getPet(@PathVariable("id") Long id) {
         log.debug("REST request to get Pet : {}", id);
-        Optional<PetDTO> petDTO = petService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(petDTO);
+        Optional<Pet> pet = petService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(pet);
     }
 
     /**
      * {@code DELETE  /pets/:id} : delete the "id" pet.
      *
-     * @param id the id of the petDTO to delete.
+     * @param id the id of the pet to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")

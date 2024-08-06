@@ -15,7 +15,7 @@ describe('Owner e2e test', () => {
   const ownerPageUrlPattern = new RegExp('/owner(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const ownerSample = { firstName: 'Vivianne', address: 'aw', city: 'Gresham', telephone: 13398 };
+  const ownerSample = { firstName: 'Jeromy', address: 'correct yahoo', city: 'Port Jordyside', telephone: 10410 };
 
   let owner;
 
@@ -162,23 +162,20 @@ describe('Owner e2e test', () => {
     });
 
     it('should create an instance of Owner', () => {
-      cy.get(`[data-cy="firstName"]`).type('Esmeralda');
-      cy.get(`[data-cy="firstName"]`).should('have.value', 'Esmeralda');
+      cy.get(`[data-cy="firstName"]`).type('Christine');
+      cy.get(`[data-cy="firstName"]`).should('have.value', 'Christine');
 
-      cy.get(`[data-cy="lastName"]`).type('Collins-Wehner');
-      cy.get(`[data-cy="lastName"]`).should('have.value', 'Collins-Wehner');
+      cy.get(`[data-cy="lastName"]`).type('Rath');
+      cy.get(`[data-cy="lastName"]`).should('have.value', 'Rath');
 
-      cy.get(`[data-cy="address"]`).type('fooey difficulty offensively');
-      cy.get(`[data-cy="address"]`).should('have.value', 'fooey difficulty offensively');
+      cy.get(`[data-cy="address"]`).type('once');
+      cy.get(`[data-cy="address"]`).should('have.value', 'once');
 
-      cy.get(`[data-cy="city"]`).type('East Luigiberg');
-      cy.get(`[data-cy="city"]`).should('have.value', 'East Luigiberg');
+      cy.get(`[data-cy="city"]`).type('Onaton');
+      cy.get(`[data-cy="city"]`).should('have.value', 'Onaton');
 
-      cy.get(`[data-cy="telephone"]`).type('2876');
-      cy.get(`[data-cy="telephone"]`).should('have.value', '2876');
-
-      cy.get(`[data-cy="ffff"]`).type('sunbathe sad blah');
-      cy.get(`[data-cy="ffff"]`).should('have.value', 'sunbathe sad blah');
+      cy.get(`[data-cy="telephone"]`).type('4770');
+      cy.get(`[data-cy="telephone"]`).should('have.value', '4770');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

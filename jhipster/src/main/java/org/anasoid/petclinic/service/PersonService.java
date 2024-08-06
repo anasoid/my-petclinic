@@ -1,7 +1,7 @@
 package org.anasoid.petclinic.service;
 
 import java.util.Optional;
-import org.anasoid.petclinic.service.dto.PersonDTO;
+import org.anasoid.petclinic.domain.Person;
 
 /**
  * Service Interface for managing {@link org.anasoid.petclinic.domain.Person}.
@@ -10,26 +10,26 @@ public interface PersonService {
     /**
      * Save a person.
      *
-     * @param personDTO the entity to save.
+     * @param person the entity to save.
      * @return the persisted entity.
      */
-    PersonDTO save(PersonDTO personDTO);
+    Person save(Person person);
 
     /**
      * Updates a person.
      *
-     * @param personDTO the entity to update.
+     * @param person the entity to update.
      * @return the persisted entity.
      */
-    PersonDTO update(PersonDTO personDTO);
+    Person update(Person person);
 
     /**
      * Partially updates a person.
      *
-     * @param personDTO the entity to update partially.
+     * @param person the entity to update partially.
      * @return the persisted entity.
      */
-    Optional<PersonDTO> partialUpdate(PersonDTO personDTO);
+    Optional<Person> partialUpdate(Person person);
 
     /**
      * Get the "id" person.
@@ -37,7 +37,7 @@ public interface PersonService {
      * @param id the id of the entity.
      * @return the entity.
      */
-    Optional<PersonDTO> findOne(Long id);
+    Optional<Person> findOne(Long id);
 
     /**
      * Delete the "id" person.

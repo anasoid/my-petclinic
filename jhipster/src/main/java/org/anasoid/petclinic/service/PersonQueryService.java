@@ -4,8 +4,6 @@ import org.anasoid.petclinic.domain.*; // for static metamodels
 import org.anasoid.petclinic.domain.Person;
 import org.anasoid.petclinic.repository.PersonRepository;
 import org.anasoid.petclinic.service.criteria.PersonCriteria;
-import org.anasoid.petclinic.service.dto.PersonDTO;
-import org.anasoid.petclinic.service.mapper.PersonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -19,7 +17,7 @@ import tech.jhipster.service.QueryService;
  * Service for executing complex queries for {@link Person} entities in the database.
  * The main input is a {@link PersonCriteria} which gets converted to {@link Specification},
  * in a way that all the filters must apply.
- * It returns a {@link Page} of {@link PersonDTO} which fulfills the criteria.
+ * It returns a {@link Page} of {@link Person} which fulfills the criteria.
  */
 @Service
 @Transactional(readOnly = true)
@@ -29,24 +27,21 @@ public class PersonQueryService extends QueryService<Person> {
 
     private final PersonRepository personRepository;
 
-    private final PersonMapper personMapper;
-
-    public PersonQueryService(PersonRepository personRepository, PersonMapper personMapper) {
+    public PersonQueryService(PersonRepository personRepository) {
         this.personRepository = personRepository;
-        this.personMapper = personMapper;
     }
 
     /**
-     * Return a {@link Page} of {@link PersonDTO} which matches the criteria from the database.
+     * Return a {@link Page} of {@link Person} which matches the criteria from the database.
      * @param criteria The object which holds all the filters, which the entities should match.
      * @param page The page, which should be returned.
      * @return the matching entities.
      */
     @Transactional(readOnly = true)
-    public Page<PersonDTO> findByCriteria(PersonCriteria criteria, Pageable page) {
+    public Page<Person> findByCriteria(PersonCriteria criteria, Pageable page) {
         log.debug("find by criteria : {}, page: {}", criteria, page);
         final Specification<Person> specification = createSpecification(criteria);
-        return personRepository.findAll(specification, page).map(personMapper::toDto);
+        return personRepository.findAll(specification, page);
     }
 
     /**
