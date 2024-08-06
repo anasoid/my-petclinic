@@ -9,6 +9,7 @@ openApiGenerate {
     inputSpec = "$rootDir/src/main/resources/swagger/api.yml".toString()
     outputDir = "$buildDir/openapi".toString()
     apiPackage = "org.anasoid.petclinic.web.api"
+    modelNameSuffix = "Dto"
     modelPackage = "org.anasoid.petclinic.service.api.dto"
     apiFilesConstrainedTo = [""]
     modelFilesConstrainedTo = [""]
