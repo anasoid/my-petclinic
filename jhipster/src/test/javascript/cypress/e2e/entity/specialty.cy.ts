@@ -15,7 +15,7 @@ describe('Specialty e2e test', () => {
   const specialtyPageUrlPattern = new RegExp('/specialty(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const specialtySample = { name: 'since' };
+  const specialtySample = { name: 'idolized' };
 
   let specialty;
 
@@ -162,8 +162,8 @@ describe('Specialty e2e test', () => {
     });
 
     it('should create an instance of Specialty', () => {
-      cy.get(`[data-cy="name"]`).type('difference aim particle');
-      cy.get(`[data-cy="name"]`).should('have.value', 'difference aim particle');
+      cy.get(`[data-cy="name"]`).type('excepting why barring');
+      cy.get(`[data-cy="name"]`).should('have.value', 'excepting why barring');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

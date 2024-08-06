@@ -552,6 +552,8 @@ class PetResourceIT {
         Pet partialUpdatedPet = new Pet();
         partialUpdatedPet.setId(pet.getId());
 
+        partialUpdatedPet.name(UPDATED_NAME).birthDate(UPDATED_BIRTH_DATE);
+
         restPetMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedPet.getId())

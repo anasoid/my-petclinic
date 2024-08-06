@@ -426,6 +426,8 @@ class SpecialtyResourceIT {
         Specialty partialUpdatedSpecialty = new Specialty();
         partialUpdatedSpecialty.setId(specialty.getId());
 
+        partialUpdatedSpecialty.name(UPDATED_NAME);
+
         restSpecialtyMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedSpecialty.getId())

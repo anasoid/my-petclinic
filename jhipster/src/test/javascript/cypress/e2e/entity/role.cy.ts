@@ -10,39 +10,39 @@ import {
   entityConfirmDeleteButtonSelector,
 } from '../../support/entity';
 
-describe('Vet e2e test', () => {
-  const vetPageUrl = '/vet';
-  const vetPageUrlPattern = new RegExp('/vet(\\?.*)?$');
+describe('Role e2e test', () => {
+  const rolePageUrl = '/role';
+  const rolePageUrlPattern = new RegExp('/role(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const vetSample = { firstName: 'Aliyah' };
+  const roleSample = { name: 'failing without' };
 
-  let vet;
+  let role;
 
   beforeEach(() => {
     cy.login(username, password);
   });
 
   beforeEach(() => {
-    cy.intercept('GET', '/api/vets+(?*|)').as('entitiesRequest');
-    cy.intercept('POST', '/api/vets').as('postEntityRequest');
-    cy.intercept('DELETE', '/api/vets/*').as('deleteEntityRequest');
+    cy.intercept('GET', '/api/roles+(?*|)').as('entitiesRequest');
+    cy.intercept('POST', '/api/roles').as('postEntityRequest');
+    cy.intercept('DELETE', '/api/roles/*').as('deleteEntityRequest');
   });
 
   afterEach(() => {
-    if (vet) {
+    if (role) {
       cy.authenticatedRequest({
         method: 'DELETE',
-        url: `/api/vets/${vet.id}`,
+        url: `/api/roles/${role.id}`,
       }).then(() => {
-        vet = undefined;
+        role = undefined;
       });
     }
   });
 
-  it('Vets menu should load Vets page', () => {
+  it('Roles menu should load Roles page', () => {
     cy.visit('/');
-    cy.clickOnEntityMenuItem('vet');
+    cy.clickOnEntityMenuItem('role');
     cy.wait('@entitiesRequest').then(({ response }) => {
       if (response?.body.length === 0) {
         cy.get(entityTableSelector).should('not.exist');
@@ -50,27 +50,27 @@ describe('Vet e2e test', () => {
         cy.get(entityTableSelector).should('exist');
       }
     });
-    cy.getEntityHeading('Vet').should('exist');
-    cy.url().should('match', vetPageUrlPattern);
+    cy.getEntityHeading('Role').should('exist');
+    cy.url().should('match', rolePageUrlPattern);
   });
 
-  describe('Vet page', () => {
+  describe('Role page', () => {
     describe('create button click', () => {
       beforeEach(() => {
-        cy.visit(vetPageUrl);
+        cy.visit(rolePageUrl);
         cy.wait('@entitiesRequest');
       });
 
-      it('should load create Vet page', () => {
+      it('should load create Role page', () => {
         cy.get(entityCreateButtonSelector).click();
-        cy.url().should('match', new RegExp('/vet/new$'));
-        cy.getEntityCreateUpdateHeading('Vet');
+        cy.url().should('match', new RegExp('/role/new$'));
+        cy.getEntityCreateUpdateHeading('Role');
         cy.get(entityCreateSaveButtonSelector).should('exist');
         cy.get(entityCreateCancelButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', vetPageUrlPattern);
+        cy.url().should('match', rolePageUrlPattern);
       });
     });
 
@@ -78,68 +78,68 @@ describe('Vet e2e test', () => {
       beforeEach(() => {
         cy.authenticatedRequest({
           method: 'POST',
-          url: '/api/vets',
-          body: vetSample,
+          url: '/api/roles',
+          body: roleSample,
         }).then(({ body }) => {
-          vet = body;
+          role = body;
 
           cy.intercept(
             {
               method: 'GET',
-              url: '/api/vets+(?*|)',
+              url: '/api/roles+(?*|)',
               times: 1,
             },
             {
               statusCode: 200,
               headers: {
-                link: '<http://localhost/api/vets?page=0&size=20>; rel="last",<http://localhost/api/vets?page=0&size=20>; rel="first"',
+                link: '<http://localhost/api/roles?page=0&size=20>; rel="last",<http://localhost/api/roles?page=0&size=20>; rel="first"',
               },
-              body: [vet],
+              body: [role],
             },
           ).as('entitiesRequestInternal');
         });
 
-        cy.visit(vetPageUrl);
+        cy.visit(rolePageUrl);
 
         cy.wait('@entitiesRequestInternal');
       });
 
-      it('detail button click should load details Vet page', () => {
+      it('detail button click should load details Role page', () => {
         cy.get(entityDetailsButtonSelector).first().click();
-        cy.getEntityDetailsHeading('vet');
+        cy.getEntityDetailsHeading('role');
         cy.get(entityDetailsBackButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', vetPageUrlPattern);
+        cy.url().should('match', rolePageUrlPattern);
       });
 
-      it('edit button click should load edit Vet page and go back', () => {
+      it('edit button click should load edit Role page and go back', () => {
         cy.get(entityEditButtonSelector).first().click();
-        cy.getEntityCreateUpdateHeading('Vet');
+        cy.getEntityCreateUpdateHeading('Role');
         cy.get(entityCreateSaveButtonSelector).should('exist');
         cy.get(entityCreateCancelButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', vetPageUrlPattern);
+        cy.url().should('match', rolePageUrlPattern);
       });
 
-      it('edit button click should load edit Vet page and save', () => {
+      it('edit button click should load edit Role page and save', () => {
         cy.get(entityEditButtonSelector).first().click();
-        cy.getEntityCreateUpdateHeading('Vet');
+        cy.getEntityCreateUpdateHeading('Role');
         cy.get(entityCreateSaveButtonSelector).click();
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', vetPageUrlPattern);
+        cy.url().should('match', rolePageUrlPattern);
       });
 
-      it('last delete button click should delete instance of Vet', () => {
-        cy.intercept('GET', '/api/vets/*').as('dialogDeleteRequest');
+      it('last delete button click should delete instance of Role', () => {
+        cy.intercept('GET', '/api/roles/*').as('dialogDeleteRequest');
         cy.get(entityDeleteButtonSelector).last().click();
         cy.wait('@dialogDeleteRequest');
-        cy.getEntityDeleteDialogHeading('vet').should('exist');
+        cy.getEntityDeleteDialogHeading('role').should('exist');
         cy.get(entityConfirmDeleteButtonSelector).click();
         cy.wait('@deleteEntityRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(204);
@@ -147,37 +147,34 @@ describe('Vet e2e test', () => {
         cy.wait('@entitiesRequest').then(({ response }) => {
           expect(response?.statusCode).to.equal(200);
         });
-        cy.url().should('match', vetPageUrlPattern);
+        cy.url().should('match', rolePageUrlPattern);
 
-        vet = undefined;
+        role = undefined;
       });
     });
   });
 
-  describe('new Vet page', () => {
+  describe('new Role page', () => {
     beforeEach(() => {
-      cy.visit(`${vetPageUrl}`);
+      cy.visit(`${rolePageUrl}`);
       cy.get(entityCreateButtonSelector).click();
-      cy.getEntityCreateUpdateHeading('Vet');
+      cy.getEntityCreateUpdateHeading('Role');
     });
 
-    it('should create an instance of Vet', () => {
-      cy.get(`[data-cy="firstName"]`).type('Tyra');
-      cy.get(`[data-cy="firstName"]`).should('have.value', 'Tyra');
-
-      cy.get(`[data-cy="lastName"]`).type('Leuschke');
-      cy.get(`[data-cy="lastName"]`).should('have.value', 'Leuschke');
+    it('should create an instance of Role', () => {
+      cy.get(`[data-cy="name"]`).type('around');
+      cy.get(`[data-cy="name"]`).should('have.value', 'around');
 
       cy.get(entityCreateSaveButtonSelector).click();
 
       cy.wait('@postEntityRequest').then(({ response }) => {
         expect(response?.statusCode).to.equal(201);
-        vet = response.body;
+        role = response.body;
       });
       cy.wait('@entitiesRequest').then(({ response }) => {
         expect(response?.statusCode).to.equal(200);
       });
-      cy.url().should('match', vetPageUrlPattern);
+      cy.url().should('match', rolePageUrlPattern);
     });
   });
 });

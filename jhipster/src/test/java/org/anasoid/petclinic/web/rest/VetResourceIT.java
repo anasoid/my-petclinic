@@ -506,8 +506,6 @@ class VetResourceIT {
         Vet partialUpdatedVet = new Vet();
         partialUpdatedVet.setId(vet.getId());
 
-        partialUpdatedVet.firstName(UPDATED_FIRST_NAME).lastName(UPDATED_LAST_NAME);
-
         restVetMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedVet.getId())

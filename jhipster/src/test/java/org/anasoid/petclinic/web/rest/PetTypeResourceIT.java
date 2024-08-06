@@ -291,6 +291,8 @@ class PetTypeResourceIT {
         PetType partialUpdatedPetType = new PetType();
         partialUpdatedPetType.setId(petType.getId());
 
+        partialUpdatedPetType.name(UPDATED_NAME);
+
         restPetTypeMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedPetType.getId())
