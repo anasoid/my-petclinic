@@ -230,26 +230,14 @@ public class ClinicServiceImpl implements ClinicService {
     @Override
     @Transactional(readOnly = true)
     public Owner findOwnerById(long id) throws DataAccessException {
-        Owner owner = null;
-        try {
-            owner = ownerRepository.findById(id).orElse(null);
-        } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
-            // just ignore not found exceptions for Jdbc/Jpa realization
-            return null;
-        }
+        Owner owner = ownerRepository.findById(id).orElse(null);
         return owner;
     }
 
     @Override
     @Transactional(readOnly = true)
     public Pet findPetById(long id) throws DataAccessException {
-        Pet pet = null;
-        try {
-            pet = petRepository.findById(id).orElse(null);
-        } catch (ObjectRetrievalFailureException | EmptyResultDataAccessException e) {
-            // just ignore not found exceptions for Jdbc/Jpa realization
-            return null;
-        }
+        Pet pet = petRepository.findById(id).orElse(null);
         return pet;
     }
 

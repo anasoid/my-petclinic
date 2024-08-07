@@ -58,6 +58,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 class OwnerRestControllerTest extends AbstractRestControllerTest {
     @Autowired
+    Environment env;
+    @Autowired
     private OwnersApiController ownerRestController;
 
     @Autowired
@@ -71,8 +73,6 @@ class OwnerRestControllerTest extends AbstractRestControllerTest {
 
     @MockBean
     private ClinicService clinicService;
-    @Autowired
-    Environment env;
 
     private MockMvc mockMvc;
 
