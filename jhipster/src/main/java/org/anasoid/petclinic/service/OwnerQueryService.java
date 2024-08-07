@@ -85,7 +85,7 @@ public class OwnerQueryService extends QueryService<Owner> {
                 specification = specification.and(buildStringSpecification(criteria.getCity(), Owner_.city));
             }
             if (criteria.getTelephone() != null) {
-                specification = specification.and(buildRangeSpecification(criteria.getTelephone(), Owner_.telephone));
+                specification = specification.and(buildStringSpecification(criteria.getTelephone(), Owner_.telephone));
             }
             if (criteria.getPetsId() != null) {
                 specification = specification.and(

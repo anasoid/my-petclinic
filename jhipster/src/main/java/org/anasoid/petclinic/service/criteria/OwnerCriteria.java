@@ -32,7 +32,7 @@ public class OwnerCriteria implements Serializable, Criteria {
 
     private StringFilter city;
 
-    private IntegerFilter telephone;
+    private StringFilter telephone;
 
     private LongFilter petsId;
 
@@ -46,7 +46,7 @@ public class OwnerCriteria implements Serializable, Criteria {
         this.lastName = other.optionalLastName().map(StringFilter::copy).orElse(null);
         this.address = other.optionalAddress().map(StringFilter::copy).orElse(null);
         this.city = other.optionalCity().map(StringFilter::copy).orElse(null);
-        this.telephone = other.optionalTelephone().map(IntegerFilter::copy).orElse(null);
+        this.telephone = other.optionalTelephone().map(StringFilter::copy).orElse(null);
         this.petsId = other.optionalPetsId().map(LongFilter::copy).orElse(null);
         this.distinct = other.distinct;
     }
@@ -151,22 +151,22 @@ public class OwnerCriteria implements Serializable, Criteria {
         this.city = city;
     }
 
-    public IntegerFilter getTelephone() {
+    public StringFilter getTelephone() {
         return telephone;
     }
 
-    public Optional<IntegerFilter> optionalTelephone() {
+    public Optional<StringFilter> optionalTelephone() {
         return Optional.ofNullable(telephone);
     }
 
-    public IntegerFilter telephone() {
+    public StringFilter telephone() {
         if (telephone == null) {
-            setTelephone(new IntegerFilter());
+            setTelephone(new StringFilter());
         }
         return telephone;
     }
 
-    public void setTelephone(IntegerFilter telephone) {
+    public void setTelephone(StringFilter telephone) {
         this.telephone = telephone;
     }
 

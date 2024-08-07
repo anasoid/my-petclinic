@@ -1,4 +1,4 @@
-package org.anasoid.petclinic.mapper;
+package org.anasoid.petclinic.service.mapper;
 
 import org.mapstruct.Mapper;
 import org.anasoid.petclinic.domain.PetType;

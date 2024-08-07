@@ -44,9 +44,8 @@ class OwnerResourceIT {
     private static final String DEFAULT_CITY = "AAAAAAAAAA";
     private static final String UPDATED_CITY = "BBBBBBBBBB";
 
-    private static final Integer DEFAULT_TELEPHONE = 1;
-    private static final Integer UPDATED_TELEPHONE = 2;
-    private static final Integer SMALLER_TELEPHONE = 1 - 1;
+    private static final String DEFAULT_TELEPHONE = "AAAAAAAAAA";
+    private static final String UPDATED_TELEPHONE = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/owners";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -503,42 +502,22 @@ class OwnerResourceIT {
 
     @Test
     @Transactional
-    void getAllOwnersByTelephoneIsGreaterThanOrEqualToSomething() throws Exception {
+    void getAllOwnersByTelephoneContainsSomething() throws Exception {
         // Initialize the database
         insertedOwner = ownerRepository.saveAndFlush(owner);
 
-        // Get all the ownerList where telephone is greater than or equal to
-        defaultOwnerFiltering("telephone.greaterThanOrEqual=" + DEFAULT_TELEPHONE, "telephone.greaterThanOrEqual=" + UPDATED_TELEPHONE);
+        // Get all the ownerList where telephone contains
+        defaultOwnerFiltering("telephone.contains=" + DEFAULT_TELEPHONE, "telephone.contains=" + UPDATED_TELEPHONE);
     }
 
     @Test
     @Transactional
-    void getAllOwnersByTelephoneIsLessThanOrEqualToSomething() throws Exception {
+    void getAllOwnersByTelephoneNotContainsSomething() throws Exception {
         // Initialize the database
         insertedOwner = ownerRepository.saveAndFlush(owner);
 
-        // Get all the ownerList where telephone is less than or equal to
-        defaultOwnerFiltering("telephone.lessThanOrEqual=" + DEFAULT_TELEPHONE, "telephone.lessThanOrEqual=" + SMALLER_TELEPHONE);
-    }
-
-    @Test
-    @Transactional
-    void getAllOwnersByTelephoneIsLessThanSomething() throws Exception {
-        // Initialize the database
-        insertedOwner = ownerRepository.saveAndFlush(owner);
-
-        // Get all the ownerList where telephone is less than
-        defaultOwnerFiltering("telephone.lessThan=" + UPDATED_TELEPHONE, "telephone.lessThan=" + DEFAULT_TELEPHONE);
-    }
-
-    @Test
-    @Transactional
-    void getAllOwnersByTelephoneIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        insertedOwner = ownerRepository.saveAndFlush(owner);
-
-        // Get all the ownerList where telephone is greater than
-        defaultOwnerFiltering("telephone.greaterThan=" + SMALLER_TELEPHONE, "telephone.greaterThan=" + DEFAULT_TELEPHONE);
+        // Get all the ownerList where telephone does not contain
+        defaultOwnerFiltering("telephone.doesNotContain=" + UPDATED_TELEPHONE, "telephone.doesNotContain=" + DEFAULT_TELEPHONE);
     }
 
     private void defaultOwnerFiltering(String shouldBeFound, String shouldNotBeFound) throws Exception {
@@ -688,7 +667,7 @@ class OwnerResourceIT {
         Owner partialUpdatedOwner = new Owner();
         partialUpdatedOwner.setId(owner.getId());
 
-        partialUpdatedOwner.firstName(UPDATED_FIRST_NAME).address(UPDATED_ADDRESS).telephone(UPDATED_TELEPHONE);
+        partialUpdatedOwner.city(UPDATED_CITY).telephone(UPDATED_TELEPHONE);
 
         restOwnerMockMvc
             .perform(

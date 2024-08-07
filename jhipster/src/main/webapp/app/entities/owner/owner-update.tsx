@@ -47,9 +47,6 @@ export const OwnerUpdate = () => {
     if (values.id !== undefined && typeof values.id !== 'number') {
       values.id = Number(values.id);
     }
-    if (values.telephone !== undefined && typeof values.telephone !== 'number') {
-      values.telephone = Number(values.telephone);
-    }
 
     const entity = {
       ...ownerEntity,
@@ -127,7 +124,7 @@ export const OwnerUpdate = () => {
                 type="text"
                 validate={{
                   required: { value: true, message: 'This field is required.' },
-                  validate: v => isNumber(v) || 'This field should be a number.',
+                  minLength: { value: 5, message: 'This field is required to be at least 5 characters.' },
                 }}
               />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/owner" replace color="info">

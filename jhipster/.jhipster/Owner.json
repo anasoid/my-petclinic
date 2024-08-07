@@ -27,8 +27,9 @@
     },
     {
       "fieldName": "telephone",
-      "fieldType": "Integer",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength"],
+      "fieldValidateRulesMinlength": "5"
     }
   ],
   "jpaMetamodelFiltering": true,

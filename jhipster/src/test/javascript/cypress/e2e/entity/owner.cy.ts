@@ -15,7 +15,7 @@ describe('Owner e2e test', () => {
   const ownerPageUrlPattern = new RegExp('/owner(\\?.*)?$');
   const username = Cypress.env('E2E_USERNAME') ?? 'user';
   const password = Cypress.env('E2E_PASSWORD') ?? 'user';
-  const ownerSample = { firstName: 'Jeromy', address: 'correct yahoo', city: 'Port Jordyside', telephone: 10410 };
+  const ownerSample = { firstName: 'Vergie', address: 'accidentally', city: 'East Dejah', telephone: '(502) 626-8407 x25116' };
 
   let owner;
 
@@ -162,20 +162,20 @@ describe('Owner e2e test', () => {
     });
 
     it('should create an instance of Owner', () => {
-      cy.get(`[data-cy="firstName"]`).type('Christine');
-      cy.get(`[data-cy="firstName"]`).should('have.value', 'Christine');
+      cy.get(`[data-cy="firstName"]`).type('Jakob');
+      cy.get(`[data-cy="firstName"]`).should('have.value', 'Jakob');
 
-      cy.get(`[data-cy="lastName"]`).type('Rath');
-      cy.get(`[data-cy="lastName"]`).should('have.value', 'Rath');
+      cy.get(`[data-cy="lastName"]`).type('Hoeger');
+      cy.get(`[data-cy="lastName"]`).should('have.value', 'Hoeger');
 
-      cy.get(`[data-cy="address"]`).type('once');
-      cy.get(`[data-cy="address"]`).should('have.value', 'once');
+      cy.get(`[data-cy="address"]`).type('mmm');
+      cy.get(`[data-cy="address"]`).should('have.value', 'mmm');
 
-      cy.get(`[data-cy="city"]`).type('Onaton');
-      cy.get(`[data-cy="city"]`).should('have.value', 'Onaton');
+      cy.get(`[data-cy="city"]`).type('Port Jarenville');
+      cy.get(`[data-cy="city"]`).should('have.value', 'Port Jarenville');
 
-      cy.get(`[data-cy="telephone"]`).type('4770');
-      cy.get(`[data-cy="telephone"]`).should('have.value', '4770');
+      cy.get(`[data-cy="telephone"]`).type('252-472-8973');
+      cy.get(`[data-cy="telephone"]`).should('have.value', '252-472-8973');
 
       cy.get(entityCreateSaveButtonSelector).click();
 

@@ -1,4 +1,4 @@
-package org.anasoid.petclinic.mapper;
+package org.anasoid.petclinic.service.mapper;
 
 import org.anasoid.petclinic.domain.Visit;
 import org.anasoid.petclinic.service.api.dto.VisitDto;
