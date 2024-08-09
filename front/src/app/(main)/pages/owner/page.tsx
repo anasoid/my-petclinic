@@ -16,6 +16,7 @@ import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../../../demo/service/ProductService';
 import { Demo } from '@/types';
+import { formatCurrency } from '@/app/ui/Format';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
 const Crud = () => {
@@ -45,13 +46,6 @@ const Crud = () => {
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data as any));
     }, []);
-
-    const formatCurrency = (value: number) => {
-        return value.toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD'
-        });
-    };
 
     const openNew = () => {
         setProduct(emptyProduct);
@@ -213,69 +207,6 @@ const Crud = () => {
         );
     };
 
-    const codeBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Code</span>
-                {rowData.code}
-            </>
-        );
-    };
-
-    const nameBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Name</span>
-                {rowData.name}
-            </>
-        );
-    };
-
-    const imageBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Image</span>
-                <img src={`/demo/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2" width="100" />
-            </>
-        );
-    };
-
-    const priceBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Price</span>
-                {formatCurrency(rowData.price as number)}
-            </>
-        );
-    };
-
-    const categoryBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Category</span>
-                {rowData.category}
-            </>
-        );
-    };
-
-    const ratingBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Reviews</span>
-                <Rating value={rowData.rating} readOnly cancel={false} />
-            </>
-        );
-    };
-
-    const statusBodyTemplate = (rowData: Demo.Product) => {
-        return (
-            <>
-                <span className="p-column-title">Status</span>
-                <span className={`product-badge status-${rowData.inventoryStatus?.toLowerCase()}`}>{rowData.inventoryStatus}</span>
-            </>
-        );
-    };
-
     const actionBodyTemplate = (rowData: Demo.Product) => {
         return (
             <>
@@ -339,13 +270,12 @@ const Crud = () => {
                         responsiveLayout="scroll"
                     >
                         <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
-                        <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column field="name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
-                        <Column header="Image" body={imageBodyTemplate}></Column>
-                        <Column field="price" header="Price" body={priceBodyTemplate} sortable></Column>
-                        <Column field="category" header="Category" sortable body={categoryBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
-                        <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable></Column>
-                        <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ minWidth: '10rem' }}></Column>
+                        <Column field="code" header="Code" sortable headerStyle={{ minWidth: '15rem' }}></Column>
+                        <Column field="name" header="Name" sortable headerStyle={{ minWidth: '15rem' }}></Column>
+
+                        <Column field="price" header="Price" body={(p: Demo.Product) => formatCurrency(p.price as number)} sortable></Column>
+                        <Column field="category" header="Category" sortable headerStyle={{ minWidth: '10rem' }}></Column>
+
                         <Column body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
 
