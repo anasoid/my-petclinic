@@ -1,0 +1,8 @@
+{
+    "withInterfaces": false,
+    "useRxJS6": true,
+    "modelPackage": "petclinic.dto",
+    "apiPackage": "petclinic.api",
+    "apiSuffix": "Client",
+    "modelNameSuffix": "Dto"
+}
