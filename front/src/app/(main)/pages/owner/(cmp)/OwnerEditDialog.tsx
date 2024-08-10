@@ -9,7 +9,7 @@ import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 import { classNames } from 'primereact/utils';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 
-const OwnerDialog = forwardRef(function OwnerDialog({ saveAction }: { saveAction: (item: Demo.Product) => boolean }, ref) {
+const OwnerEditDialog = forwardRef(function OwnerEditDialog({ saveAction }: { saveAction: (item: Demo.Product) => boolean }, ref) {
     let emptyProduct: Demo.Product = {
         id: '',
         name: '',
@@ -137,4 +137,4 @@ const OwnerDialog = forwardRef(function OwnerDialog({ saveAction }: { saveAction
     );
 });
 
-export default OwnerDialog;
+export default OwnerEditDialog;

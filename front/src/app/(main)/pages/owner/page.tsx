@@ -8,7 +8,7 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import { ProductService } from '../../../../demo/service/ProductService';
-import OwnerDialog from './(cmp)/OwnerDialog';
+import OwnerEditDialog from './(cmp)/OwnerEditDialog';
 import OwnerGrid from './(cmp)/OwnerGrid';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
@@ -201,7 +201,7 @@ const Crud = () => {
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
                     <OwnerGrid ref={dtRef} data={products} title="Manage Pr" actions={actionBodyTemplate} />
 
-                    <OwnerDialog ref={diagRef} saveAction={saveProduct} />
+                    <OwnerEditDialog ref={diagRef} saveAction={saveProduct} />
 
                     <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
                         <div className="flex align-items-center justify-content-center">
