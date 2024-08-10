@@ -4,10 +4,24 @@ import { Demo } from '@/types';
 import { Column, ColumnBodyOptions } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { Dispatch, forwardRef, SetStateAction, useImperativeHandle, useRef, useState } from 'react';
 
-const OwnerGrid = forwardRef(function OwnerGrid({ title, data, actions }: { title: string; data: any; actions: (data: any, options: ColumnBodyOptions) => React.ReactNode }, ref) {
-    const [selectedItems, setselectedItems] = useState(null);
+const OwnerGrid = forwardRef(function OwnerGrid(
+    {
+        title,
+        data,
+        actions,
+        selectedItems,
+        setselectedItems
+    }: {
+        title: string;
+        data: any;
+        selectedItems: any;
+        setselectedItems: Dispatch<SetStateAction<null>>;
+        actions: (data: any, options: ColumnBodyOptions) => React.ReactNode;
+    },
+    ref
+) {
     const [globalFilter, setGlobalFilter] = useState('');
     const dt = useRef<DataTable<any>>(null);
 

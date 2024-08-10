@@ -26,12 +26,10 @@ const Crud = () => {
     };
 
     const [products, setProducts] = useState(null);
-    const [productDialog, setProductDialog] = useState(false);
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
     const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
     const [product, setProduct] = useState<Demo.Product>(emptyProduct);
     const [selectedProducts, setSelectedProducts] = useState(null);
-    const [submitted, setSubmitted] = useState(false);
     const toast = useRef<Toast>(null);
     const dtRef = useRef(null);
     const diagRef = useRef(null);
@@ -53,8 +51,6 @@ const Crud = () => {
     };
 
     const saveProduct = (product: Demo.Product): boolean => {
-        setSubmitted(true);
-
         if (product.name.trim()) {
             let _products = [...(products as any)];
             let _product = { ...product };
@@ -199,7 +195,7 @@ const Crud = () => {
                 <div className="card">
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-                    <OwnerGrid ref={dtRef} data={products} title="Manage Pr" actions={actionBodyTemplate} />
+                    <OwnerGrid ref={dtRef} data={products} title="Manage Product" actions={actionBodyTemplate} selectedItems={selectedProducts} setselectedItems={setSelectedProducts} />
 
                     <OwnerEditDialog ref={diagRef} saveAction={saveProduct} />
 
