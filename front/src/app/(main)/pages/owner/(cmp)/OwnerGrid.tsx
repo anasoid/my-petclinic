@@ -4,9 +4,9 @@ import { Demo } from '@/types';
 import { Column, ColumnBodyOptions } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
-import { useRef, useState } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 
-const OwnerGrid = ({ title, data, actions }: { title: string; data: any; actions: (data: any, options: ColumnBodyOptions) => React.ReactNode }) => {
+const OwnerGrid = forwardRef(function OwnerGrid({ title, data, actions }: { title: string; data: any; actions: (data: any, options: ColumnBodyOptions) => React.ReactNode }, ref) {
     const [selectedItems, setselectedItems] = useState(null);
     const [globalFilter, setGlobalFilter] = useState('');
     const dt = useRef<DataTable<any>>(null);
@@ -23,7 +23,9 @@ const OwnerGrid = ({ title, data, actions }: { title: string; data: any; actions
     const exportCSV = () => {
         dt.current?.exportCSV();
     };
-
+    useImperativeHandle(ref, () => ({
+        exportCSV
+    }));
     return (
         <DataTable
             ref={dt}
@@ -51,6 +53,6 @@ const OwnerGrid = ({ title, data, actions }: { title: string; data: any; actions
             <Column body={actions} header="actions" headerStyle={{ minWidth: '10rem' }}></Column>
         </DataTable>
     );
-};
+});
 
 export default OwnerGrid;

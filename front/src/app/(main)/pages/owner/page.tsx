@@ -42,7 +42,7 @@ const Crud = () => {
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState('');
     const toast = useRef<Toast>(null);
-    const dt = useRef<DataTable<any>>(null);
+    const dtRef = useRef(null);
     const gridRef = useRef<any>(null);
 
     useEffect(() => {
@@ -147,7 +147,7 @@ const Crud = () => {
     };
 
     const exportCSV = () => {
-        dt.current?.exportCSV();
+        dtRef.current?.exportCSV();
     };
 
     const confirmDeleteSelected = () => {
@@ -218,16 +218,6 @@ const Crud = () => {
         );
     };
 
-    const header = (
-        <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Manage Products</h5>
-            <span className="block mt-2 md:mt-0 p-input-icon-left">
-                <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
-            </span>
-        </div>
-    );
-
     const productDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog} />
@@ -253,7 +243,7 @@ const Crud = () => {
                 <div className="card">
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-                    <OwnerGrid data={products} title="Manage Pr" actions={actionBodyTemplate} />
+                    <OwnerGrid ref={dtRef} data={products} title="Manage Pr" actions={actionBodyTemplate} />
 
                     <Dialog visible={productDialog} style={{ width: '450px' }} header="Product Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
                         {product.image && <img src={`/demo/images/product/${product.image}`} alt={product.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" />}
