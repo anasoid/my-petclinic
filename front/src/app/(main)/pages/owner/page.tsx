@@ -1,8 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import ConfirmationDialog from '@/components/crud/ConfirmationDialog';
 import { Demo } from '@/types';
 import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
 import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
@@ -26,13 +26,13 @@ const Crud = () => {
     };
 
     const [products, setProducts] = useState(null);
-    const [deleteProductDialog, setDeleteProductDialog] = useState(false);
-    const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
     const [product, setProduct] = useState<Demo.Product>(emptyProduct);
     const [selectedProducts, setSelectedProducts] = useState(null);
     const toast = useRef<Toast>(null);
     const dtRef = useRef(null);
     const diagRef = useRef(null);
+    const deleteRef = useRef(null);
+    const deletesRef = useRef(null);
 
     useEffect(() => {
         ProductService.getProducts().then((data) => setProducts(data as any));
@@ -40,14 +40,6 @@ const Crud = () => {
 
     const openNew = () => {
         diagRef.current?.openNew();
-    };
-
-    const hideDeleteProductDialog = () => {
-        setDeleteProductDialog(false);
-    };
-
-    const hideDeleteProductsDialog = () => {
-        setDeleteProductsDialog(false);
     };
 
     const saveProduct = (product: Demo.Product): boolean => {
@@ -65,7 +57,12 @@ const Crud = () => {
                     life: 3000
                 });
             } else {
-                _product.id = createId();
+                let id = '';
+                let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                for (let i = 0; i < 5; i++) {
+                    id += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                _product.id = id;
                 _product.image = 'product-placeholder.svg';
                 _products.push(_product);
                 toast.current?.show({
@@ -87,24 +84,6 @@ const Crud = () => {
         diagRef.current?.editProduct(product);
     };
 
-    const confirmDeleteProduct = (product: Demo.Product) => {
-        setProduct(product);
-        setDeleteProductDialog(true);
-    };
-
-    const deleteProduct = () => {
-        let _products = (products as any)?.filter((val: any) => val.id !== product.id);
-        setProducts(_products);
-        setDeleteProductDialog(false);
-        setProduct(emptyProduct);
-        toast.current?.show({
-            severity: 'success',
-            summary: 'Successful',
-            detail: 'Product Deleted',
-            life: 3000
-        });
-    };
-
     const findIndexById = (id: string) => {
         let index = -1;
         for (let i = 0; i < (products as any)?.length; i++) {
@@ -117,27 +96,32 @@ const Crud = () => {
         return index;
     };
 
-    const createId = () => {
-        let id = '';
-        let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return id;
-    };
-
     const exportCSV = () => {
         dtRef.current?.exportCSV();
     };
-
+    const confirmDeleteProduct = (product: Demo.Product) => {
+        setProduct(product);
+        deleteRef.current?.displayDialog();
+    };
     const confirmDeleteSelected = () => {
-        setDeleteProductsDialog(true);
+        deletesRef.current?.displayDialog();
+    };
+
+    const deleteProduct = () => {
+        let _products = (products as any)?.filter((val: any) => val.id !== product.id);
+        setProducts(_products);
+        setProduct(emptyProduct);
+        toast.current?.show({
+            severity: 'success',
+            summary: 'Successful',
+            detail: 'Product Deleted',
+            life: 3000
+        });
     };
 
     const deleteSelectedProducts = () => {
         let _products = (products as any)?.filter((val: any) => !(selectedProducts as any)?.includes(val));
         setProducts(_products);
-        setDeleteProductsDialog(false);
         setSelectedProducts(null);
         toast.current?.show({
             severity: 'success',
@@ -145,6 +129,7 @@ const Crud = () => {
             detail: 'Products Deleted',
             life: 3000
         });
+        return true;
     };
 
     const leftToolbarTemplate = () => {
@@ -176,46 +161,19 @@ const Crud = () => {
         );
     };
 
-    const deleteProductDialogFooter = (
-        <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProductDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteProduct} />
-        </>
-    );
-    const deleteProductsDialogFooter = (
-        <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteProductsDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteSelectedProducts} />
-        </>
-    );
-
     return (
         <div className="grid crud-demo">
             <div className="col-12">
                 <div className="card">
                     <Toast ref={toast} />
-                    <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                    <Toolbar className="mb-4" start={leftToolbarTemplate} end={rightToolbarTemplate}></Toolbar>
                     <OwnerGrid ref={dtRef} data={products} title="Manage Product" actions={actionBodyTemplate} selectedItems={selectedProducts} setselectedItems={setSelectedProducts} />
 
                     <OwnerEditDialog ref={diagRef} saveAction={saveProduct} />
 
-                    <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
-                        <div className="flex align-items-center justify-content-center">
-                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {product && (
-                                <span>
-                                    Are you sure you want to delete <b>{product.name}</b>?
-                                </span>
-                            )}
-                        </div>
-                    </Dialog>
+                    <ConfirmationDialog ref={deleteRef} message={'Are you sure you want to delete ( ' + product.name + ' )?'} confirmationAction={deleteProduct} />
 
-                    <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
-                        <div className="flex align-items-center justify-content-center">
-                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {product && <span>Are you sure you want to delete the selected products?</span>}
-                        </div>
-                    </Dialog>
+                    <ConfirmationDialog ref={deletesRef} message="Are you sure you want to delete the selected products?" confirmationAction={deleteSelectedProducts} />
                 </div>
             </div>
         </div>
