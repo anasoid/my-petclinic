@@ -25,9 +25,9 @@ const Crud = () => {
         inventoryStatus: 'INSTOCK'
     };
 
-    const [products, setProducts] = useState(null);
+    const [items, setItems] = useState(null);
     const [product, setProduct] = useState<Demo.Product>(emptyProduct);
-    const [selectedProducts, setSelectedProducts] = useState(null);
+    const [selectedItems, setSelectedItems] = useState(null);
     const toast = useRef<Toast>(null);
     const dtRef = useRef(null);
     const diagRef = useRef(null);
@@ -35,7 +35,7 @@ const Crud = () => {
     const deletesRef = useRef(null);
 
     useEffect(() => {
-        ProductService.getProducts().then((data) => setProducts(data as any));
+        ProductService.getProducts().then((data) => setItems(data as any));
     }, []);
 
     const openNew = () => {
@@ -44,12 +44,12 @@ const Crud = () => {
 
     const saveProduct = (product: Demo.Product): boolean => {
         if (product.name.trim()) {
-            let _products = [...(products as any)];
+            let _items = [...(items as any)];
             let _product = { ...product };
             if (product.id) {
                 const index = findIndexById(product.id);
 
-                _products[index] = _product;
+                _items[index] = _product;
                 toast.current?.show({
                     severity: 'success',
                     summary: 'Successful',
@@ -64,7 +64,7 @@ const Crud = () => {
                 }
                 _product.id = id;
                 _product.image = 'product-placeholder.svg';
-                _products.push(_product);
+                _items.push(_product);
                 toast.current?.show({
                     severity: 'success',
                     summary: 'Successful',
@@ -73,7 +73,7 @@ const Crud = () => {
                 });
             }
 
-            setProducts(_products as any);
+            setItems(_items as any);
             return true;
         } else {
             return false;
@@ -86,8 +86,8 @@ const Crud = () => {
 
     const findIndexById = (id: string) => {
         let index = -1;
-        for (let i = 0; i < (products as any)?.length; i++) {
-            if ((products as any)[i].id === id) {
+        for (let i = 0; i < (items as any)?.length; i++) {
+            if ((items as any)[i].id === id) {
                 index = i;
                 break;
             }
@@ -108,8 +108,8 @@ const Crud = () => {
     };
 
     const deleteProduct = () => {
-        let _products = (products as any)?.filter((val: any) => val.id !== product.id);
-        setProducts(_products);
+        let _items = (items as any)?.filter((val: any) => val.id !== product.id);
+        setItems(_items);
         setProduct(emptyProduct);
         toast.current?.show({
             severity: 'success',
@@ -119,14 +119,14 @@ const Crud = () => {
         });
     };
 
-    const deleteSelectedProducts = () => {
-        let _products = (products as any)?.filter((val: any) => !(selectedProducts as any)?.includes(val));
-        setProducts(_products);
-        setSelectedProducts(null);
+    const deleteSelectedItems = () => {
+        let _items = (items as any)?.filter((val: any) => !(selectedItems as any)?.includes(val));
+        setItems(_items);
+        setSelectedItems(null);
         toast.current?.show({
             severity: 'success',
             summary: 'Successful',
-            detail: 'Products Deleted',
+            detail: 'Items Deleted',
             life: 3000
         });
         return true;
@@ -137,7 +137,7 @@ const Crud = () => {
             <React.Fragment>
                 <div className="my-2">
                     <Button label="New" icon="pi pi-plus" severity="success" className=" mr-2" onClick={openNew} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !(selectedProducts as any).length} />
+                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedItems || !(selectedItems as any).length} />
                 </div>
             </React.Fragment>
         );
@@ -147,7 +147,7 @@ const Crud = () => {
         return (
             <React.Fragment>
                 <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
+                <Button label="Export" icon="pi pi-upload" severitiy="help" onClick={exportCSV} />
             </React.Fragment>
         );
     };
@@ -167,13 +167,13 @@ const Crud = () => {
                 <div className="card">
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" start={leftToolbarTemplate} end={rightToolbarTemplate}></Toolbar>
-                    <OwnerGrid ref={dtRef} data={products} title="Manage Product" actions={actionBodyTemplate} selectedItems={selectedProducts} setselectedItems={setSelectedProducts} />
+                    <OwnerGrid ref={dtRef} data={items} title="Manage Product" actions={actionBodyTemplate} selectedItems={selectedItems} setselectedItems={setSelectedItems} />
 
                     <OwnerEditDialog ref={diagRef} saveAction={saveProduct} />
 
                     <CmpConfirmationDialog ref={deleteRef} message={'Are you sure you want to delete ( ' + product.name + ' )?'} confirmationAction={deleteProduct} />
 
-                    <CmpConfirmationDialog ref={deletesRef} message="Are you sure you want to delete the selected products?" confirmationAction={deleteSelectedProducts} />
+                    <CmpConfirmationDialog ref={deletesRef} message="Are you sure you want to delete the selected items?" confirmationAction={deleteSelectedItems} />
                 </div>
             </div>
         </div>
