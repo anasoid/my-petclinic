@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import ConfirmationDialog from '@/components/crud/ConfirmationDialog';
+import CmpConfirmationDialog from '@/components/crud/CmpConfirmationDialog';
 import { Demo } from '@/types';
 import { Button } from 'primereact/button';
 import { FileUpload } from 'primereact/fileupload';
@@ -171,9 +171,9 @@ const Crud = () => {
 
                     <OwnerEditDialog ref={diagRef} saveAction={saveProduct} />
 
-                    <ConfirmationDialog ref={deleteRef} message={'Are you sure you want to delete ( ' + product.name + ' )?'} confirmationAction={deleteProduct} />
+                    <CmpConfirmationDialog ref={deleteRef} message={'Are you sure you want to delete ( ' + product.name + ' )?'} confirmationAction={deleteProduct} />
 
-                    <ConfirmationDialog ref={deletesRef} message="Are you sure you want to delete the selected products?" confirmationAction={deleteSelectedProducts} />
+                    <CmpConfirmationDialog ref={deletesRef} message="Are you sure you want to delete the selected products?" confirmationAction={deleteSelectedProducts} />
                 </div>
             </div>
         </div>

@@ -3,7 +3,7 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 
-const ConfirmationDialog = forwardRef(function ConfirmationDialog({ message, confirmationAction }: { message: string; confirmationAction: () => void }, ref) {
+const CmpConfirmationDialog = forwardRef(function CmpConfirmationDialog({ message, confirmationAction }: { message: string; confirmationAction: () => void }, ref) {
     const [confirmationDialog, setConfirmationDialog] = useState(false);
 
     const hideDialog = () => {
@@ -39,4 +39,4 @@ const ConfirmationDialog = forwardRef(function ConfirmationDialog({ message, con
     );
 });
 
-export default ConfirmationDialog;
+export default CmpConfirmationDialog;

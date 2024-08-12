@@ -1,4 +1,4 @@
-import { formatCurrency, formatDate, formatDecimal, formatMoney, formatMoneyM, formatPercent } from '@/app/ui/Format';
+import { formatCurrency } from '@/app/ui/Format';
 import { Demo } from '@/types';
 
 import { Column, ColumnBodyOptions } from 'primereact/column';
@@ -12,8 +12,10 @@ const OwnerGrid = forwardRef(function OwnerGrid(
         data,
         actions,
         selectedItems,
-        setselectedItems
+        setselectedItems,
+        dataKey = 'id'
     }: {
+        dataKey?: string;
         title: string;
         data: any;
         selectedItems: any;
@@ -46,15 +48,15 @@ const OwnerGrid = forwardRef(function OwnerGrid(
             value={data}
             selection={selectedItems}
             onSelectionChange={(e) => setselectedItems(e.value as any)}
-            dataKey="id"
+            dataKey={dataKey}
             paginator
             rows={10}
             rowsPerPageOptions={[5, 10, 25]}
             className="datatable-responsive"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
             globalFilter={globalFilter}
-            emptyMessage="No products found."
+            emptyMessage="No items found."
             header={header}
             responsiveLayout="scroll"
         >
