@@ -105,8 +105,8 @@ const Crud = () => {
         deletesRef.current?.displayDialog();
     };
 
-    const deleteProduct = (item: Demo.Product) => {
-        let _items = (items as any)?.filter((val: any) => val.id !== item.id);
+    const deleteProduct = (item?: Demo.Product) => {
+        let _items = (items as any)?.filter((val: any) => val.id !== item?.id);
         setItems(_items);
         toast.current?.show({
             severity: 'success',
@@ -126,7 +126,6 @@ const Crud = () => {
             detail: 'Items Deleted',
             life: 3000
         });
-        return true;
     };
 
     const leftToolbarTemplate = () => {
@@ -168,9 +167,9 @@ const Crud = () => {
 
                     <OwnerEditDialog ref={diagRef} saveAction={saveProduct} />
 
-                    <CmpConfirmationDialog ref={deleteRef} message={'Are you sure you want to delete '} confirmationAction={deleteProduct} formatItem={(p: Demo.Product) => p.name} />
+                    <CmpConfirmationDialog<Demo.Product> ref={deleteRef} message={'Are you sure you want to delete '} confirmationAction={deleteProduct} formatItem={(p: Demo.Product) => p.name} />
 
-                    <CmpConfirmationDialog ref={deletesRef} message="Are you sure you want to delete the selected items" confirmationAction={deleteSelectedItems} />
+                    <CmpConfirmationDialog<undefined> ref={deletesRef} message="Are you sure you want to delete the selected items" confirmationAction={deleteSelectedItems} />
                 </div>
             </div>
         </div>

@@ -1,27 +1,35 @@
 import { Button } from 'primereact/button';
 
 import { Dialog } from 'primereact/dialog';
-import { forwardRef, useImperativeHandle, useState } from 'react';
+import { ForwardedRef, forwardRef, useImperativeHandle, useState } from 'react';
 
-interface CmpConfirmationDialogProps {
+interface CmpConfirmationDialogProps<T> {
     message: string;
-    confirmationAction: (param?: any) => void;
-    formatItem?: (param: any) => string;
+    confirmationAction: { (param?: T): void };
+    formatItem?: (param: T) => string;
 }
-const CmpConfirmationDialog = forwardRef(function CmpConfirmationDialog(props: CmpConfirmationDialogProps, ref) {
+function CmpConfirmationDialogInner<T>(props: CmpConfirmationDialogProps<T>, ref: ForwardedRef<unknown>) {
     const [confirmationDialog, setConfirmationDialog] = useState(false);
-    const [item, setItem] = useState(null);
+    const [item, setItem] = useState<T | null>(null);
 
     const hideDialog = () => {
         setConfirmationDialog(false);
         setItem(null);
     };
-    const displayDialog = (param?: any) => {
-        setItem(param);
+    const displayDialog = (param?: T) => {
+        if (param !== undefined) {
+            setItem(param);
+        }
         setConfirmationDialog(true);
     };
     const actionDialog = () => {
-        props.confirmationAction(item);
+        console.log('me' + item);
+        if (item !== null) {
+            props.confirmationAction(item);
+        } else {
+            props.confirmationAction();
+        }
+
         hideDialog();
     };
 
@@ -55,6 +63,8 @@ const CmpConfirmationDialog = forwardRef(function CmpConfirmationDialog(props: C
             </div>
         </Dialog>
     );
-});
+}
+
+const CmpConfirmationDialog = forwardRef(CmpConfirmationDialogInner) as <T>(props: CmpConfirmationDialogProps<T> & { ref?: ForwardedRef<unknown> }) => ReturnType<typeof CmpConfirmationDialogInner>;
 
 export default CmpConfirmationDialog;
