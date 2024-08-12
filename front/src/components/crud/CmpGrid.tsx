@@ -1,37 +1,24 @@
-import { formatCurrency } from '@/app/ui/Format';
-import { Demo } from '@/types';
-
 import { Column, ColumnBodyOptions } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
 import { Dispatch, forwardRef, SetStateAction, useImperativeHandle, useRef, useState } from 'react';
 
-const CmpGrid = forwardRef(function CmpGrid(
-    {
-        children,
-        title,
-        data,
-        actions,
-        selectedItems,
-        setselectedItems,
-        dataKey = 'id'
-    }: {
-        children: any;
-        dataKey?: string;
-        title: string;
-        data: any;
-        selectedItems: any;
-        setselectedItems: Dispatch<SetStateAction<null>>;
-        actions?: (data: any, options: ColumnBodyOptions) => React.ReactNode;
-    },
-    ref
-) {
+interface CmpGridProps {
+    children: React.ReactNode;
+    dataKey?: string;
+    title: string;
+    data: any;
+    selectedItems: any;
+    setselectedItems: Dispatch<SetStateAction<null>>;
+    actions?: (data: any, options: ColumnBodyOptions) => React.ReactNode;
+}
+const CmpGrid = forwardRef(function CmpGrid(props: CmpGridProps, ref) {
     const [globalFilter, setGlobalFilter] = useState('');
     const dt = useRef<DataTable<any>>(null);
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">{title}</h5>
+            <h5 className="m-0">{props.title}</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.currentTarget.value)} placeholder="Search..." />
@@ -47,10 +34,10 @@ const CmpGrid = forwardRef(function CmpGrid(
     return (
         <DataTable
             ref={dt}
-            value={data}
-            selection={selectedItems}
-            onSelectionChange={(e) => setselectedItems(e.value as any)}
-            dataKey={dataKey}
+            value={props.data}
+            selection={props.selectedItems}
+            onSelectionChange={(e) => props.setselectedItems(e.value as any)}
+            dataKey={props.dataKey}
             paginator
             rows={10}
             rowsPerPageOptions={[5, 10, 25]}
@@ -62,8 +49,8 @@ const CmpGrid = forwardRef(function CmpGrid(
             header={header}
             responsiveLayout="scroll"
         >
-            {children}
-            {actions !== undefined ? <Column body={actions} header="actions" headerStyle={{ minWidth: '10rem' }}></Column> : null}
+            {props.children}
+            {props.actions !== undefined ? <Column body={props.actions} header="actions" headerStyle={{ minWidth: '10rem' }}></Column> : null}
         </DataTable>
     );
 });

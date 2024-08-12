@@ -5,24 +5,15 @@ import { Demo } from '@/types';
 import { Column, ColumnBodyOptions } from 'primereact/column';
 import { Dispatch, forwardRef, SetStateAction, useImperativeHandle, useRef } from 'react';
 
-const OwnerGrid = forwardRef(function OwnerGrid(
-    {
-        title,
-        data,
-        actions,
-        selectedItems,
-        setselectedItems,
-        dataKey = 'id'
-    }: {
-        dataKey?: string;
-        title: string;
-        data: any;
-        selectedItems: any;
-        setselectedItems: Dispatch<SetStateAction<null>>;
-        actions?: (data: any, options: ColumnBodyOptions) => React.ReactNode;
-    },
-    ref
-) {
+interface OwnerGridProps {
+    dataKey?: string;
+    title: string;
+    data: any;
+    selectedItems: any;
+    setselectedItems: Dispatch<SetStateAction<null>>;
+    actions?: (data: any, options: ColumnBodyOptions) => React.ReactNode;
+}
+const OwnerGrid = forwardRef(function OwnerGrid(props: OwnerGridProps, ref) {
     const dt = useRef(null);
 
     const exportCSV = () => {
@@ -33,7 +24,7 @@ const OwnerGrid = forwardRef(function OwnerGrid(
     }));
     return (
         <>
-            <CmpGrid ref={dt} data={data} dataKey={dataKey} title={title} actions={actions} selectedItems={selectedItems} setselectedItems={setselectedItems}>
+            <CmpGrid ref={dt} data={props.data} dataKey={props.dataKey} title={props.title} actions={props.actions} selectedItems={props.selectedItems} setselectedItems={props.setselectedItems}>
                 <Column selectionMode="multiple" headerStyle={{ width: '4rem' }}></Column>
                 <Column field="code" header="Code" sortable headerStyle={{ minWidth: '15rem' }}></Column>
                 <Column field="name" header="Name" sortable headerStyle={{ minWidth: '15rem' }}></Column>

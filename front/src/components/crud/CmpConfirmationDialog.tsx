@@ -3,7 +3,11 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { forwardRef, useImperativeHandle, useState } from 'react';
 
-const CmpConfirmationDialog = forwardRef(function CmpConfirmationDialog({ message, confirmationAction }: { message: string; confirmationAction: () => void }, ref) {
+interface CmpConfirmationDialogProps {
+    message: string;
+    confirmationAction: () => void;
+}
+const CmpConfirmationDialog = forwardRef(function CmpConfirmationDialog(props: CmpConfirmationDialogProps, ref) {
     const [confirmationDialog, setConfirmationDialog] = useState(false);
 
     const hideDialog = () => {
@@ -13,7 +17,7 @@ const CmpConfirmationDialog = forwardRef(function CmpConfirmationDialog({ messag
         setConfirmationDialog(true);
     };
     const actionDialog = () => {
-        confirmationAction();
+        props.confirmationAction();
 
         hideDialog();
     };
@@ -33,7 +37,7 @@ const CmpConfirmationDialog = forwardRef(function CmpConfirmationDialog({ messag
         <Dialog visible={confirmationDialog} style={{ width: '450px' }} header="Confirm" modal footer={dialogFooter} onHide={hideDialog}>
             <div className="flex align-items-center justify-content-center">
                 <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                <span>{message}</span>
+                <span>{props.message}</span>
             </div>
         </Dialog>
     );
