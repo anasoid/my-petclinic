@@ -13,18 +13,6 @@ import OwnerGrid from './(cmp)/OwnerGrid';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
 const Crud = () => {
-    let emptyProduct: Demo.Product = {
-        id: '',
-        name: '',
-        image: '',
-        description: '',
-        category: '',
-        price: 0,
-        quantity: 0,
-        rating: 0,
-        inventoryStatus: 'INSTOCK'
-    };
-
     const [items, setItems] = useState(null);
     const [selectedItems, setSelectedItems] = useState(null);
     const toast = useRef<Toast>(null);
@@ -41,7 +29,7 @@ const Crud = () => {
         diagRef.current?.openNew();
     };
 
-    const saveProduct = (product: Demo.Product): boolean => {
+    const saveItem = (product: Demo.Product): boolean => {
         if (product.name.trim()) {
             let _items = [...(items as any)];
             let _product = { ...product };
@@ -79,8 +67,8 @@ const Crud = () => {
         }
     };
 
-    const editProduct = (product: Demo.Product) => {
-        diagRef.current?.editProduct(product);
+    const editItem = (product: Demo.Product) => {
+        diagRef.current?.editItem(product);
     };
 
     const findIndexById = (id: string) => {
@@ -98,26 +86,26 @@ const Crud = () => {
     const exportCSV = () => {
         dtRef.current?.exportCSV();
     };
-    const confirmDeleteProduct = (product: Demo.Product) => {
+    const confirmDelete = (product: Demo.Product) => {
         deleteRef.current?.displayDialog(product);
     };
     const confirmDeleteSelected = () => {
-        deletesRef.current?.displayDialog();
+        deletesRef.current?.displayDialog(selectedItems);
     };
 
-    const deleteProduct = (item?: Demo.Product) => {
+    const deleteItem = (item?: Demo.Product) => {
         let _items = (items as any)?.filter((val: any) => val.id !== item?.id);
         setItems(_items);
         toast.current?.show({
             severity: 'success',
             summary: 'Successful',
-            detail: 'Product Deleted',
+            detail: 'Item Deleted',
             life: 3000
         });
     };
 
-    const deleteSelectedItems = () => {
-        let _items = (items as any)?.filter((val: any) => !(selectedItems as any)?.includes(val));
+    const deleteSelectedItems = (itemToremove?: Demo.Product[]) => {
+        let _items = (items as any)?.filter((val: any) => !(itemToremove as any)?.includes(val));
         setItems(_items);
         setSelectedItems(null);
         toast.current?.show({
@@ -151,8 +139,8 @@ const Crud = () => {
     const actionBodyTemplate = (rowData: Demo.Product) => {
         return (
             <>
-                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2" onClick={() => editProduct(rowData)} />
-                <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-pencil" rounded severity="success" className="mr-2" onClick={() => editItem(rowData)} />
+                <Button icon="pi pi-trash" rounded severity="warning" onClick={() => confirmDelete(rowData)} />
             </>
         );
     };
@@ -165,9 +153,9 @@ const Crud = () => {
                     <Toolbar className="mb-4" start={leftToolbarTemplate} end={rightToolbarTemplate}></Toolbar>
                     <OwnerGrid ref={dtRef} data={items} title="Manage Product" actions={actionBodyTemplate} selectedItems={selectedItems} setselectedItems={setSelectedItems} />
 
-                    <OwnerEditDialog ref={diagRef} saveAction={saveProduct} />
+                    <OwnerEditDialog ref={diagRef} saveAction={saveItem} />
 
-                    <CmpConfirmationDialog<Demo.Product> ref={deleteRef} message={'Are you sure you want to delete '} confirmationAction={deleteProduct} formatItem={(p: Demo.Product) => p.name} />
+                    <CmpConfirmationDialog<Demo.Product> ref={deleteRef} message={'Are you sure you want to delete '} confirmationAction={deleteItem} formatItem={(p: Demo.Product) => p.name} />
 
                     <CmpConfirmationDialog<undefined> ref={deletesRef} message="Are you sure you want to delete the selected items" confirmationAction={deleteSelectedItems} />
                 </div>

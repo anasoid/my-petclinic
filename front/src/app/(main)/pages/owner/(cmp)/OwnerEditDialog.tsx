@@ -34,7 +34,7 @@ const OwnerEditDialog = forwardRef(function OwnerEditDialog(props: OwnerEditDial
         setSubmitted(false);
         setProductDialog(false);
     };
-    const editProduct = (product: Demo.Product) => {
+    const editItem = (product: Demo.Product) => {
         setProduct({ ...product });
         setProductDialog(true);
     };
@@ -44,7 +44,7 @@ const OwnerEditDialog = forwardRef(function OwnerEditDialog(props: OwnerEditDial
         setProductDialog(true);
     };
     useImperativeHandle(ref, () => ({
-        editProduct,
+        editItem,
         openNew
     }));
     const saveProduct = () => {
