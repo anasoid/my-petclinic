@@ -1,5 +1,6 @@
 import { Demo } from '@/types';
 import { Button } from 'primereact/button';
+import { DefaultDataBinder } from '@/app/ui/binder/DefaultDataBinder';
 
 import { Dialog } from 'primereact/dialog';
 import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber';
@@ -29,7 +30,7 @@ const OwnerEditDialog = forwardRef(function OwnerEditDialog(props: OwnerEditDial
     const [product, setProduct] = useState<Demo.Product>(emptyProduct);
     const [productDialog, setProductDialog] = useState(false);
     const [submitted, setSubmitted] = useState(false);
-
+    const dataBinder = new DefaultDataBinder<Demo.Product>(product, setProduct);
     const hideDialog = () => {
         setSubmitted(false);
         setProductDialog(false);
@@ -63,17 +64,7 @@ const OwnerEditDialog = forwardRef(function OwnerEditDialog(props: OwnerEditDial
     );
 
     const onCategoryChange = (e: RadioButtonChangeEvent) => {
-        let _product = { ...product };
-        _product['category'] = e.value;
-        setProduct(_product);
-    };
-
-    const onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: string) => {
-        const val = (e.target && e.target.value) || '';
-        let _product = { ...product };
-        _product[`${name}`] = val;
-
-        setProduct(_product);
+        dataBinder.updateValue(e.value, 'category');
     };
 
     const onInputNumberChange = (e: InputNumberValueChangeEvent, name: string) => {
@@ -91,7 +82,7 @@ const OwnerEditDialog = forwardRef(function OwnerEditDialog(props: OwnerEditDial
                 <InputText
                     id="name"
                     value={product.name}
-                    onChange={(e) => onInputChange(e, 'name')}
+                    onChange={(e) => dataBinder.onInputChange(e, 'name')}
                     required
                     autoFocus
                     className={classNames({
@@ -102,7 +93,7 @@ const OwnerEditDialog = forwardRef(function OwnerEditDialog(props: OwnerEditDial
             </div>
             <div className="field">
                 <label htmlFor="description">Description</label>
-                <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                <InputTextarea id="description" value={product.description} onChange={(e) => dataBinder.onInputChange(e, 'description')} required rows={3} cols={20} />
             </div>
 
             <div className="field">
@@ -130,11 +121,11 @@ const OwnerEditDialog = forwardRef(function OwnerEditDialog(props: OwnerEditDial
             <div className="formgrid grid">
                 <div className="field col">
                     <label htmlFor="price">Price</label>
-                    <InputNumber id="price" value={product.price} onValueChange={(e) => onInputNumberChange(e, 'price')} mode="currency" currency="USD" locale="en-US" />
+                    <InputNumber id="price" value={product.price} onValueChange={(e) => dataBinder.onInputNumberChange(e, 'price')} mode="currency" currency="USD" locale="en-US" />
                 </div>
                 <div className="field col">
                     <label htmlFor="quantity">Quantity</label>
-                    <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} />
+                    <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => dataBinder.onInputNumberChange(e, 'quantity')} />
                 </div>
             </div>
         </Dialog>
