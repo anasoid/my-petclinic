@@ -1,8 +1,10 @@
 {
     "withInterfaces": false,
     "useRxJS6": true,
-    "modelPackage": "petclinic.dto",
-    "apiPackage": "petclinic.api",
+    "withSeparateModelsAndApi": true,
+    "modelPackage": "dto",
+    "apiPackage": "api",
     "apiSuffix": "Client",
-    "modelNameSuffix": "Dto"
+    "apiNameSuffix": "Client",
+    "legacyDiscriminatorBehavior": false
 }

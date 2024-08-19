@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+/*  @next/next/no-img-element */
 'use client';
 import CmpConfirmationDialog from '@/components/crud/CmpConfirmationDialog';
 import { Demo } from '@/types';
@@ -7,22 +7,23 @@ import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
-import { ProductService } from '../../../../demo/service/ProductService';
 import OwnerEditDialog from './(cmp)/OwnerEditDialog';
 import OwnerGrid from './(cmp)/OwnerGrid';
+import { OwnerService } from '@/business/service/OwnerService';
+import { Owner } from '@gensrc/petclinic';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
 const Crud = () => {
-    const [items, setItems] = useState(null);
+    const [items, setItems] = useState<Owner[]>([]);
     const [selectedItems, setSelectedItems] = useState(null);
     const toast = useRef<Toast>(null);
     const dtRef = useRef(null);
     const diagRef = useRef(null);
     const deleteRef = useRef(null);
     const deletesRef = useRef(null);
-
+    let ownerService: OwnerService = new OwnerService();
     useEffect(() => {
-        ProductService.getProducts().then((data) => setItems(data as any));
+        ownerService.listOwners().then((data) => setItems(data as OwnerFieldsDto[]));
     }, []);
 
     const openNew = () => {
@@ -86,16 +87,17 @@ const Crud = () => {
     const exportCSV = () => {
         dtRef.current?.exportCSV();
     };
-    const confirmDelete = (product: Demo.Product) => {
-        deleteRef.current?.displayDialog(product);
+    const confirmDelete = (owner: Owner) => {
+        deleteRef.current?.displayDialog(owner);
     };
     const confirmDeleteSelected = () => {
         deletesRef.current?.displayDialog(selectedItems);
     };
 
-    const deleteItem = (item?: Demo.Product) => {
+    const deleteItem = (item?: Owner) => {
         let _items = (items as any)?.filter((val: any) => val.id !== item?.id);
         setItems(_items);
+        ownerService.deleteOwner(item?.id);
         toast.current?.show({
             severity: 'success',
             summary: 'Successful',
@@ -136,7 +138,7 @@ const Crud = () => {
         );
     };
 
-    const actionBodyTemplate = (rowData: Demo.Product) => {
+    const actionBodyTemplate = (rowData: Owner) => {
         return (
             <>
                 <Button icon="pi pi-pencil" rounded severity="success" className="mr-2" onClick={() => editItem(rowData)} />
