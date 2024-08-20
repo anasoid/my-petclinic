@@ -8,6 +8,8 @@
         "start": "next start",
         "format": "prettier --write \"{app,demo,layout,types}/**/*.{js,ts,tsx,d.ts}\"",
         "lint": "next lint",
+        "eslint": "eslint",
+        "type-check": "tsc --noEmit",
         "clean": "npx rimraf gensrc",
         "openapi": "npx @openapitools/openapi-generator-cli generate -i ../jhipster/src/main/resources/swagger/api.yml -g typescript-fetch -t .openapi/typescript-fetch -o ./gensrc/petclinic -c openapi-config.json"
     },

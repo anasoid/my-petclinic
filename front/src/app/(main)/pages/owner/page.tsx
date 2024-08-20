@@ -10,11 +10,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import OwnerEditDialog from './(cmp)/OwnerEditDialog';
 import OwnerGrid from './(cmp)/OwnerGrid';
 import { OwnerService } from '@/business/service/OwnerService';
-import { Owner } from '@gensrc/petclinic';
+import { OwnerDto } from '@gensrc/petclinic';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
 const Crud = () => {
-    const [items, setItems] = useState<Owner[]>([]);
+    const [items, setItems] = useState<OwnerDto[]>([]);
     const [selectedItems, setSelectedItems] = useState(null);
     const toast = useRef<Toast>(null);
     const dtRef = useRef(null);
@@ -23,10 +23,11 @@ const Crud = () => {
     const deletesRef = useRef(null);
     let ownerService: OwnerService = new OwnerService();
     useEffect(() => {
-        ownerService.listOwners().then((data) => setItems(data as OwnerFieldsDto[]));
+        ownerService.listOwners().then((data) => setItems(data as OwnerDto[]));
     }, []);
 
     const openNew = () => {
+        // @ts-ignore
         diagRef.current?.openNew();
     };
 
@@ -69,6 +70,7 @@ const Crud = () => {
     };
 
     const editItem = (product: Demo.Product) => {
+        // @ts-ignore
         diagRef.current?.editItem(product);
     };
 
@@ -85,16 +87,19 @@ const Crud = () => {
     };
 
     const exportCSV = () => {
+        // @ts-ignore
         dtRef.current?.exportCSV();
     };
-    const confirmDelete = (owner: Owner) => {
+    const confirmDelete = (owner: OwnerDto) => {
+        // @ts-ignore
         deleteRef.current?.displayDialog(owner);
     };
     const confirmDeleteSelected = () => {
+        // @ts-ignore
         deletesRef.current?.displayDialog(selectedItems);
     };
 
-    const deleteItem = (item?: Owner) => {
+    const deleteItem = (item?: OwnerDto) => {
         let _items = (items as any)?.filter((val: any) => val.id !== item?.id);
         setItems(_items);
         ownerService.deleteOwner(item?.id);
@@ -138,7 +143,7 @@ const Crud = () => {
         );
     };
 
-    const actionBodyTemplate = (rowData: Owner) => {
+    const actionBodyTemplate = (rowData: OwnerDto) => {
         return (
             <>
                 <Button icon="pi pi-pencil" rounded severity="success" className="mr-2" onClick={() => editItem(rowData)} />

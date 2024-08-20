@@ -5,6 +5,7 @@
     "modelPackage": "dto",
     "apiPackage": "api",
     "apiSuffix": "Client",
+    "modelNameSuffix": "Dto",
     "apiNameSuffix": "Client",
     "legacyDiscriminatorBehavior": false
 }

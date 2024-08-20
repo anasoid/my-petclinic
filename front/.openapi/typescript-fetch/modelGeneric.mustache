@@ -1,12 +1,12 @@
 import { mapValues } from '../runtime{{importFileExtension}}';
 {{#hasImports}}
 {{#tsImports}}
-import type { {{{classname}}} } from './{{filename}}{{importFileExtension}}';
+import type { {{{classname}}} } from './{{classname}}{{importFileExtension}}';
 import {
     {{classname}}FromJSON,
     {{classname}}FromJSONTyped,
     {{classname}}ToJSON,
-} from './{{filename}}{{importFileExtension}}';
+} from './{{classname}}{{importFileExtension}}';
 {{/tsImports}}
 
 {{/hasImports}}
