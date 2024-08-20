@@ -1,4 +1,4 @@
-import { DeleteOwnerRequest, OwnerClient } from '@gensrc/petclinic/apis';
+import { DeleteOwnerRequest, ListOwnersRequest, OwnerClient } from '@gensrc/petclinic/apis';
 import { PetClinicConfigure } from './configuration/PetClinicConfigure';
 
 export class OwnerApiClient {
@@ -11,7 +11,7 @@ export class OwnerApiClient {
         return new OwnerClient(this.configure.getConfiguration());
     }
     public listOwners() {
-        const response = this.getOwnerApi().listOwners();
+        const response = this.getOwnerApi().listOwners({} as ListOwnersRequest);
         return response.then((res) => res);
     }
     public deleteOwner(ownerId: number) {

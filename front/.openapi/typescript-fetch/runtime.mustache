@@ -388,7 +388,17 @@ export class JSONApiResponse<T> {
     constructor(public raw: Response, private transformer: ResponseTransformer<T> = (jsonValue: any) => jsonValue) {}
 
     async value(): Promise<T> {
-        return this.transformer(await this.raw.json());
+        
+        let status: number = this.raw.status;
+        let promise: Promise<any>;
+        if (status == 204) {
+            promise = new Promise((resolve, reject) => {
+                return '';
+            });
+        } else {
+            promise = this.raw.json();
+        }
+        return this.transformer(await promise);
     }
 }
 
