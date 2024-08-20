@@ -9,7 +9,7 @@
         "format": "prettier --write \"{app,demo,layout,types}/**/*.{js,ts,tsx,d.ts}\"",
         "lint": "next lint",
         "clean": "npx rimraf gensrc",
-        "openapi": "npx @openapitools/openapi-generator-cli generate -i ../jhipster/src/main/resources/swagger/api.yml -g typescript-fetch -o ./gensrc/petclinic -c openapi-config.json"
+        "openapi": "npx @openapitools/openapi-generator-cli generate -i ../jhipster/src/main/resources/swagger/api.yml -g typescript-fetch -t .openapi/typescript-fetch -o ./gensrc/petclinic -c openapi-config.json"
     },
     "dependencies": {
         "@types/node": "20.3.1",
