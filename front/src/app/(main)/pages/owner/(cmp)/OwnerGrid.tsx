@@ -15,6 +15,7 @@ const OwnerGrid = forwardRef(function OwnerGrid(props: OwnerGridProps, ref) {
     const dt = useRef(null);
 
     const exportCSV = () => {
+        //@ts-ignore
         dt.current?.exportCSV();
     };
     useImperativeHandle(ref, () => ({

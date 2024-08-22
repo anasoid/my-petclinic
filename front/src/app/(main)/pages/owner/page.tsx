@@ -21,9 +21,9 @@ const Crud = () => {
     const diagRef = useRef(null);
     const deleteRef = useRef(null);
     const deletesRef = useRef(null);
-    let ownerService: OwnerService = new OwnerService();
+    const ownerService: OwnerService = new OwnerService();
     useEffect(() => {
-        ownerService.listOwners().then((data) => setItems(data as OwnerDto[]));
+        ownerService.list().then((data) => setItems(data as OwnerDto[]));
     }, []);
 
     const openNew = () => {
@@ -31,50 +31,77 @@ const Crud = () => {
         diagRef.current?.openNew();
     };
 
-    const saveItem = (product: Demo.Product): boolean => {
-        if (product.name.trim()) {
-            let _items = [...(items as any)];
-            let _product = { ...product };
-            if (product.id) {
-                const index = findIndexById(product.id);
-
-                _items[index] = _product;
-                toast.current?.show({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Product Updated',
-                    life: 3000
-                });
+    const saveItem = (item: OwnerDto): boolean => {
+        if (item.firstName.trim()) {
+            if (item.id) {
+                ownerService
+                    .save(item)
+                    .then(
+                        () =>
+                            toast.current?.show({
+                                severity: 'success',
+                                summary: 'Successful',
+                                detail: 'Item Updated',
+                                life: 3000
+                            }),
+                        () =>
+                            toast.current?.show({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: 'Item updating error',
+                                life: 3000
+                            })
+                    )
+                    .then(() => {
+                        let _item = { ...item };
+                        //@ts-ignore
+                        const index = findIndexById(item.id);
+                        let _items = [...(items as any)];
+                        _items[index] = _item;
+                        setItems(_items as any);
+                    })
+                    .catch(() =>
+                        toast.current?.show({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'Item updating error',
+                            life: 3000
+                        })
+                    );
             } else {
-                let id = '';
-                let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                for (let i = 0; i < 5; i++) {
-                    id += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-                _product.id = id;
-                _product.image = 'product-placeholder.svg';
-                _items.push(_product);
-                toast.current?.show({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Product Created',
-                    life: 3000
-                });
+                ownerService
+                    .save(item)
+                    .then(
+                        () =>
+                            toast.current?.show({
+                                severity: 'success',
+                                summary: 'Successful',
+                                detail: 'Item Created',
+                                life: 3000
+                            }),
+                        () =>
+                            toast.current?.show({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: 'Item creation error',
+                                life: 3000
+                            })
+                    )
+                    .then(() => ownerService.list().then((data) => setItems(data as OwnerDto[])));
             }
 
-            setItems(_items as any);
             return true;
         } else {
             return false;
         }
     };
 
-    const editItem = (product: Demo.Product) => {
+    const editItem = (item: OwnerDto) => {
         // @ts-ignore
-        diagRef.current?.editItem(product);
+        diagRef.current?.editItem(item);
     };
 
-    const findIndexById = (id: string) => {
+    const findIndexById = (id: number) => {
         let index = -1;
         for (let i = 0; i < (items as any)?.length; i++) {
             if ((items as any)[i].id === id) {
@@ -102,16 +129,17 @@ const Crud = () => {
     const deleteItem = (item?: OwnerDto) => {
         let _items = (items as any)?.filter((val: any) => val.id !== item?.id);
         setItems(_items);
-        ownerService.deleteOwner(item?.id);
-        toast.current?.show({
-            severity: 'success',
-            summary: 'Successful',
-            detail: 'Item Deleted',
-            life: 3000
+        ownerService.delete(item?.id).then(() => {
+            toast.current?.show({
+                severity: 'success',
+                summary: 'Successful',
+                detail: 'Item Deleted',
+                life: 3000
+            });
         });
     };
 
-    const deleteSelectedItems = (itemToremove?: Demo.Product[]) => {
+    const deleteSelectedItems = (itemToremove?: OwnerDto[]) => {
         let _items = (items as any)?.filter((val: any) => !(itemToremove as any)?.includes(val));
         setItems(_items);
         setSelectedItems(null);
@@ -158,11 +186,11 @@ const Crud = () => {
                 <div className="card">
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" start={leftToolbarTemplate} end={rightToolbarTemplate}></Toolbar>
-                    <OwnerGrid ref={dtRef} data={items} title="Manage Product" actions={actionBodyTemplate} selectedItems={selectedItems} setselectedItems={setSelectedItems} />
+                    <OwnerGrid ref={dtRef} data={items} title="Manage Owner" actions={actionBodyTemplate} selectedItems={selectedItems} setselectedItems={setSelectedItems} />
 
                     <OwnerEditDialog ref={diagRef} saveAction={saveItem} />
 
-                    <CmpConfirmationDialog<Demo.Product> ref={deleteRef} message={'Are you sure you want to delete '} confirmationAction={deleteItem} formatItem={(p: Demo.Product) => p.name} />
+                    <CmpConfirmationDialog<OwnerDto> ref={deleteRef} message={'Are you sure you want to delete '} confirmationAction={deleteItem} formatItem={(p: OwnerDto) => p.firstName} />
 
                     <CmpConfirmationDialog<undefined> ref={deletesRef} message="Are you sure you want to delete the selected items" confirmationAction={deleteSelectedItems} />
                 </div>

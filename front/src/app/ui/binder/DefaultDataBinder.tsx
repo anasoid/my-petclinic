@@ -1,3 +1,4 @@
+import { InputMaskChangeEvent } from 'primereact/inputmask';
 import { InputNumberValueChangeEvent } from 'primereact/inputnumber';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -10,6 +11,10 @@ export class DefaultDataBinder<T> {
         this.item = item;
     }
     onInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, name: keyof T) => {
+        const val = (e.target && e.target.value) || '';
+        this.updateValue(val, name);
+    };
+    onInputMaskChangeEvent = (e: InputMaskChangeEvent, name: keyof T) => {
         const val = (e.target && e.target.value) || '';
         this.updateValue(val, name);
     };

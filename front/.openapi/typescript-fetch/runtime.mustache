@@ -393,7 +393,7 @@ export class JSONApiResponse<T> {
         let promise: Promise<any>;
         if (status == 204) {
             promise = new Promise((resolve, reject) => {
-                return '';
+                resolve(null);
             });
         } else {
             promise = this.raw.json();
