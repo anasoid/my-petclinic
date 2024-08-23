@@ -1,7 +1,8 @@
 /*  @next/next/no-img-element */
 'use client';
+import { OwnerService } from '@/business/service/OwnerService';
 import CmpConfirmationDialog from '@/components/crud/CmpConfirmationDialog';
-import { Demo } from '@/types';
+import { OwnerDto } from '@gensrc/petclinic';
 import { Button } from 'primereact/button';
 import { FileUpload } from 'primereact/fileupload';
 import { Toast } from 'primereact/toast';
@@ -9,11 +10,9 @@ import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import OwnerEditDialog from './(cmp)/OwnerEditDialog';
 import OwnerGrid from './(cmp)/OwnerGrid';
-import { OwnerService } from '@/business/service/OwnerService';
-import { OwnerDto } from '@gensrc/petclinic';
 
 /* @todo Used 'as any' for types here. Will fix in next version due to onSelectionChange event type issue. */
-const Crud = () => {
+const PageOwner = () => {
     const [items, setItems] = useState<OwnerDto[]>([]);
     const [selectedItems, setSelectedItems] = useState(null);
     const toast = useRef<Toast>(null);
@@ -166,7 +165,7 @@ const Crud = () => {
         return (
             <React.Fragment>
                 <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} chooseLabel="Import" className="mr-2 inline-block" />
-                <Button label="Export" icon="pi pi-upload" severitiy="help" onClick={exportCSV} />
+                <Button label="Export" icon="pi pi-upload" severity="help" onClick={exportCSV} />
             </React.Fragment>
         );
     };
@@ -199,4 +198,4 @@ const Crud = () => {
     );
 };
 
-export default Crud;
+export default PageOwner;

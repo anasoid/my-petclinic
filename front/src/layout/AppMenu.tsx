@@ -1,11 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 
-import React, { useContext } from 'react';
+import { AppMenuItem } from '@/types';
+import { useContext } from 'react';
 import AppMenuitem from './AppMenuitem';
 import { LayoutContext } from './context/layoutcontext';
 import { MenuProvider } from './context/menucontext';
-import Link from 'next/link';
-import { AppMenuItem } from '@/types';
 
 const AppMenu = () => {
     const { layoutConfig } = useContext(LayoutContext);
@@ -13,7 +12,7 @@ const AppMenu = () => {
     const model: AppMenuItem[] = [
         {
             label: 'Home',
-            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
+            items: [{ label: 'Home', icon: 'pi pi-fw pi-home', to: '/' }]
         },
         {
             label: 'Pet Clinic',
