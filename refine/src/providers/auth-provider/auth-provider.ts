@@ -2,6 +2,7 @@
 
 import type { AuthProvider } from "@refinedev/core";
 import Cookies from "js-cookie";
+import { authManager } from "./AuthManager";
 
 const mockUsers = [
   {
@@ -22,20 +23,23 @@ export const authProvider: AuthProvider = {
   login: async ({ email, username, password, remember }) => {
     // Suppose we actually send a request to the back end here.
     const user = mockUsers[0];
-
-    if (user) {
-      Cookies.set("auth", JSON.stringify(user), {
-        expires: 30, // 30 days
-        path: "/",
-      });
-      return {
-        success: true,
-        redirectTo: "/",
-      };
+    let result: boolean = await authManager.login(email, password);
+  
+    if (result) {
+      if (user) {
+        Cookies.set("auth", JSON.stringify(user), {
+          expires: 30, // 30 days
+          path: "/",
+        });
+        return {
+          success: result,
+          redirectTo: "/",
+        };
+      }
     }
 
     return {
-      success: false,
+      success: result,
       error: {
         name: "LoginError",
         message: "Invalid username or password",

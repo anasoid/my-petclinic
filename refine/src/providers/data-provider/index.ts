@@ -1,7 +1,7 @@
 "use client";
 
+import { apiConfig } from "@providers/api-provider";
 import dataProviderSimpleRest from "@refinedev/simple-rest";
 
-const API_URL = "https://api.fake-rest.refine.dev";
 
-export const dataProvider = dataProviderSimpleRest(API_URL);
+export const dataProvider = dataProviderSimpleRest(apiConfig.getApiUrl());
