@@ -10,7 +10,7 @@ import React, { Suspense } from "react";
 import { AppIcon } from "@components/app-icon";
 import { ColorModeContextProvider } from "@contexts/color-mode";
 import { authProvider } from "@providers/auth-provider";
-import { dataProvider } from "@providers/data-provider";
+import { dataProvider, dataProviders } from "@providers/data-provider";
 
 export const metadata: Metadata = {
   title: "Refine",
@@ -39,7 +39,7 @@ export default function RootLayout({
                 <DevtoolsProvider>
                   <Refine
                     routerProvider={routerProvider}
-                    dataProvider={dataProvider}
+                    dataProvider={dataProviders}
                     notificationProvider={notificationProvider}
                     authProvider={authProvider}
                     resources={[
@@ -61,6 +61,17 @@ export default function RootLayout({
                         show: "/categories/show/:id",
                         meta: {
                           canDelete: true,
+                        },
+                      },
+                      {
+                        name: "specialties",
+                        list: "/specialties",
+                        create: "/specialties/create",
+                        edit: "/specialties/edit/:id",
+                        show: "/specialties/show/:id",
+                        meta: {
+                          canDelete: true,
+                          dataProviderName: "petclinic",
                         },
                       },
                     ]}
