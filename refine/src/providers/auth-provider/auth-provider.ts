@@ -1,41 +1,20 @@
 "use client";
 
 import type { AuthProvider } from "@refinedev/core";
-import Cookies from "js-cookie";
-import { authManager } from "./AuthManager";
 
-const mockUsers = [
-  {
-    name: "John Doe",
-    email: "johndoe@mail.com",
-    roles: ["admin"],
-    avatar: "https://i.pravatar.cc/150?img=1",
-  },
-  {
-    name: "Jane Doe",
-    email: "janedoe@mail.com",
-    roles: ["editor"],
-    avatar: "https://i.pravatar.cc/150?img=1",
-  },
-];
+import { authManager } from "./AuthManager";
 
 export const authProvider: AuthProvider = {
   login: async ({ email, username, password, remember }) => {
     // Suppose we actually send a request to the back end here.
-    const user = mockUsers[0];
+    console.log("login");
     let result: boolean = await authManager.login(email, password);
-  
+
     if (result) {
-      if (user) {
-        Cookies.set("auth", JSON.stringify(user), {
-          expires: 30, // 30 days
-          path: "/",
-        });
-        return {
-          success: result,
-          redirectTo: "/",
-        };
-      }
+      return {
+        success: result,
+        redirectTo: "/",
+      };
     }
 
     return {
@@ -47,14 +26,16 @@ export const authProvider: AuthProvider = {
     };
   },
   logout: async () => {
-    Cookies.remove("auth", { path: "/" });
+    console.log("logout");
+    authManager.logout();
     return {
       success: true,
       redirectTo: "/login",
     };
   },
   check: async () => {
-    const auth = Cookies.get("auth");
+    console.log("check");
+    const auth = authManager.isAuthenticated();
     if (auth) {
       return {
         authenticated: true,
@@ -68,22 +49,15 @@ export const authProvider: AuthProvider = {
     };
   },
   getPermissions: async () => {
-    const auth = Cookies.get("auth");
-    if (auth) {
-      const parsedUser = JSON.parse(auth);
-      return parsedUser.roles;
-    }
-    return null;
+    console.log("getPermissions");
+    return authManager.getCurrentRoles();
   },
   getIdentity: async () => {
-    const auth = Cookies.get("auth");
-    if (auth) {
-      const parsedUser = JSON.parse(auth);
-      return parsedUser;
-    }
-    return null;
+    console.log("getIdentity");
+    return authManager.getCurrentUser();
   },
   onError: async (error) => {
+    console.log("onError");
     if (error.response?.status === 401) {
       return {
         logout: true,
