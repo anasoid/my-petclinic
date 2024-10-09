@@ -81,9 +81,6 @@ export class AuthManager {
       return false;
     }
   }
-  isServerAuthenticated(): boolean {
-    return Cookies.get(COOKIE_KEY) == "true";
-  }
 
   getCurrentToken(): string | undefined {
     let token = localStorage.getItem(TOKEN_KEY);
