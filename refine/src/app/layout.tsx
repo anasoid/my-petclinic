@@ -10,7 +10,7 @@ import React, { Suspense } from "react";
 import { AppIcon } from "@components/app-icon";
 import { ColorModeContextProvider } from "@contexts/color-mode";
 import { authProvider } from "@providers/auth-provider";
-import { dataProvider, dataProviders } from "@providers/data-provider";
+import { dataProviders } from "@providers/data-provider";
 
 export const metadata: Metadata = {
   title: "Refine",

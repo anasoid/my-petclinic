@@ -1,107 +1,139 @@
 import type { AxiosInstance } from "axios";
-import { DataProvider } from "@refinedev/core";
-import { axiosInstance } from "@refinedev/simple-rest";
+import { stringify } from "query-string";
+import type { DataProvider } from "@refinedev/core";
 
+import { axiosInstancePetClinic } from "./utils/petclinic-rest";
+import { generateFilter, generateSort } from "@refinedev/simple-rest";
+
+type MethodTypes = "get" | "delete" | "head" | "options";
+type MethodTypesWithBody = "post" | "put" | "patch";
 /**
  * Check out the Data Provider documentation for detailed information
  * https://refine.dev/docs/api-reference/core/providers/data-provider/
  **/
-export const petClinicDataProvider = (
+export const petClinicDataProvider  = (
   apiUrl: string,
-  _httpClient:  AxiosInstance = axiosInstance, // TODO: replace `any` with your http client type
-): DataProvider => ({
+  httpClient: AxiosInstance = axiosInstancePetClinic,
+): Omit<
+  Required<DataProvider>,
+  "createMany" | "updateMany" | "deleteMany"
+> => ({
   getList: async ({ resource, pagination, filters, sorters, meta }) => {
     const url = `${apiUrl}/${resource}`;
 
-    console.log("getList", {
-      resource,
-      pagination,
-      filters,
-      sorters,
-      meta,
-      url,
+    const { current = 1, pageSize = 10, mode = "server" } = pagination ?? {};
+
+    const { headers: headersFromMeta, method } = meta ?? {};
+    const requestMethod = (method as MethodTypes) ?? "get";
+
+    const queryFilters = generateFilter(filters);
+
+    const query: {
+      _start?: number;
+      _end?: number;
+      _sort?: string;
+      _order?: string;
+    } = {};
+
+    if (mode === "server") {
+      query._start = (current - 1) * pageSize;
+      query._end = current * pageSize;
+    }
+
+    const generatedSort = generateSort(sorters);
+    if (generatedSort) {
+      const { _sort, _order } = generatedSort;
+      query._sort = _sort.join(",");
+      query._order = _order.join(",");
+    }
+
+    const combinedQuery = { ...query, ...queryFilters };
+    const urlWithQuery = Object.keys(combinedQuery).length
+      ? `${url}?${stringify(combinedQuery)}`
+      : url;
+
+    const { data, headers } = await httpClient[requestMethod](urlWithQuery, {
+      headers: headersFromMeta,
     });
 
-    // TODO: send request to the API
-    // const response = await httpClient.get(url, {});
+    const total = +headers["x-total-count"];
 
     return {
-      data: [],
-      total: 0,
+      data,
+      total: total || data.length,
     };
   },
 
   getMany: async ({ resource, ids, meta }) => {
-    console.log("getMany", {
-      resource,
-      ids,
-      meta,
-    });
+    const { headers, method } = meta ?? {};
+    const requestMethod = (method as MethodTypes) ?? "get";
 
-    // TODO: send request to the API
-    // const response = await httpClient.get(url, {});
+    const { data } = await httpClient[requestMethod](
+      `${apiUrl}/${resource}?${stringify({ id: ids })}`,
+      { headers },
+    );
 
     return {
-      data: [],
+      data,
     };
   },
 
   create: async ({ resource, variables, meta }) => {
-    console.log("create", {
-      resource,
-      variables,
-      meta,
+    const url = `${apiUrl}/${resource}`;
+
+    const { headers, method } = meta ?? {};
+    const requestMethod = (method as MethodTypesWithBody) ?? "post";
+
+    const { data } = await httpClient[requestMethod](url, variables, {
+      headers,
     });
 
     return {
-      data: {} as any,
+      data,
     };
   },
 
   update: async ({ resource, id, variables, meta }) => {
-    console.log("update", {
-      resource,
-      id,
-      variables,
-      meta,
+    const url = `${apiUrl}/${resource}/${id}`;
+
+    const { headers, method } = meta ?? {};
+    const requestMethod = (method as MethodTypesWithBody) ?? "patch";
+
+    const { data } = await httpClient[requestMethod](url, variables, {
+      headers,
     });
 
-    // TODO: send request to the API
-    // const response = await httpClient.post(url, {});
-
     return {
-      data: {} as any,
+      data,
     };
   },
 
   getOne: async ({ resource, id, meta }) => {
-    console.log("getOne", {
-      resource,
-      id,
-      meta,
-    });
+    const url = `${apiUrl}/${resource}/${id}`;
 
-    // TODO: send request to the API
-    // const response = await httpClient.get(url, {});
+    const { headers, method } = meta ?? {};
+    const requestMethod = (method as MethodTypes) ?? "get";
+
+    const { data } = await httpClient[requestMethod](url, { headers });
 
     return {
-      data: {} as any,
+      data,
     };
   },
 
   deleteOne: async ({ resource, id, variables, meta }) => {
-    console.log("deleteOne", {
-      resource,
-      id,
-      variables,
-      meta,
+    const url = `${apiUrl}/${resource}/${id}`;
+
+    const { headers, method } = meta ?? {};
+    const requestMethod = (method as MethodTypesWithBody) ?? "delete";
+
+    const { data } = await httpClient[requestMethod](url, {
+      data: variables,
+      headers,
     });
 
-    // TODO: send request to the API
-    // const response = await httpClient.post(url, {});
-
     return {
-      data: {} as any,
+      data,
     };
   },
 
@@ -117,23 +149,54 @@ export const petClinicDataProvider = (
     payload,
     query,
     headers,
-    meta,
   }) => {
-    console.log("custom", {
-      url,
-      method,
-      filters,
-      sorters,
-      payload,
-      query,
-      headers,
-      meta,
-    });
+    let requestUrl = `${url}?`;
 
-    // TODO: send request to the API
-    // const requestMethod = meta.method
-    // const response = await httpClient[requestMethod](url, {});
+    if (sorters) {
+      const generatedSort = generateSort(sorters);
+      if (generatedSort) {
+        const { _sort, _order } = generatedSort;
+        const sortQuery = {
+          _sort: _sort.join(","),
+          _order: _order.join(","),
+        };
+        requestUrl = `${requestUrl}&${stringify(sortQuery)}`;
+      }
+    }
 
-    return {} as any;
+    if (filters) {
+      const filterQuery = generateFilter(filters);
+      requestUrl = `${requestUrl}&${stringify(filterQuery)}`;
+    }
+
+    if (query) {
+      requestUrl = `${requestUrl}&${stringify(query)}`;
+    }
+
+    let axiosResponse;
+    switch (method) {
+      case "put":
+      case "post":
+      case "patch":
+        axiosResponse = await httpClient[method](url, payload, {
+          headers,
+        });
+        break;
+      case "delete":
+        axiosResponse = await httpClient.delete(url, {
+          data: payload,
+          headers: headers,
+        });
+        break;
+      default:
+        axiosResponse = await httpClient.get(requestUrl, {
+          headers,
+        });
+        break;
+    }
+
+    const { data } = axiosResponse;
+
+    return Promise.resolve({ data });
   },
 });
