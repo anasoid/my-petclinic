@@ -90,31 +90,31 @@ export default function RootLayout({
                         },
                       },
                       {
-                        name: "old",
+                        name: "demo",
                         meta: {
                           canDelete: true,
                         },
                       },
                       {
                         name: "blog_posts",
-                        list: "/blog-posts",
-                        create: "/blog-posts/create",
-                        edit: "/blog-posts/edit/:id",
-                        show: "/blog-posts/show/:id",
+                        list: "/demo/blog-posts",
+                        create: "/demo/blog-posts/create",
+                        edit: "/demo/blog-posts/edit/:id",
+                        show: "/demo/blog-posts/show/:id",
                         meta: {
                           canDelete: true,
-                          parent: "old",
+                          parent: "demo",
                         },
                       },
                       {
                         name: "categories",
-                        list: "/categories",
-                        create: "/categories/create",
-                        edit: "/categories/edit/:id",
-                        show: "/categories/show/:id",
+                        list: "/demo/categories",
+                        create: "/demo/categories/create",
+                        edit: "/demo/categories/edit/:id",
+                        show: "/demo/categories/show/:id",
                         meta: {
                           canDelete: true,
-                          parent: "old",
+                          parent: "demo",
                         },
                       },
                     ]}
