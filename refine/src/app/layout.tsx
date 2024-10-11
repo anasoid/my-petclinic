@@ -49,32 +49,8 @@ export default function RootLayout({
                       {
                         name: "petclinic",
                         meta: {
-                          canDelete: true,
+                          canDelete: false,
                           label: "Pet clinic",
-                        },
-                      },
-                      {
-                        name: "specialties",
-                        list: "/petclinic/specialties",
-                        create: "/petclinic/specialties/create",
-                        edit: "/petclinic/specialties/edit/:id",
-                        show: "/petclinic/specialties/show/:id",
-                        meta: {
-                          canDelete: true,
-                          dataProviderName: PROVIDER_NAME_PET_CLINIC,
-                          parent: "petclinic",
-                        },
-                      },
-                      {
-                        name: "pet-types",
-                        list: "/petclinic/pet-types",
-                        create: "/petclinic/pet-types/create",
-                        edit: "/petclinic/pet-types/edit/:id",
-                        show: "/petclinic/pet-types/show/:id",
-                        meta: {
-                          label: "PetTypes",
-                          dataProviderName: PROVIDER_NAME_PET_CLINIC,
-                          parent: "petclinic",
                         },
                       },
                       {
@@ -87,6 +63,38 @@ export default function RootLayout({
                           label: "Vets",
                           dataProviderName: PROVIDER_NAME_PET_CLINIC,
                           parent: "petclinic",
+                        },
+                      },
+                      {
+                        name: "master-data",
+                        meta: {
+                          canDelete: false,
+                          label: "Master Data",
+                          parent: "petclinic",
+                        },
+                      },
+                      {
+                        name: "specialties",
+                        list: "/petclinic/specialties",
+                        create: "/petclinic/specialties/create",
+                        edit: "/petclinic/specialties/edit/:id",
+                        show: "/petclinic/specialties/show/:id",
+                        meta: {
+                          canDelete: true,
+                          dataProviderName: PROVIDER_NAME_PET_CLINIC,
+                          parent: "master-data",
+                        },
+                      },
+                      {
+                        name: "pet-types",
+                        list: "/petclinic/pet-types",
+                        create: "/petclinic/pet-types/create",
+                        edit: "/petclinic/pet-types/edit/:id",
+                        show: "/petclinic/pet-types/show/:id",
+                        meta: {
+                          label: "PetTypes",
+                          dataProviderName: PROVIDER_NAME_PET_CLINIC,
+                          parent: "master-data",
                         },
                       },
                       {
