@@ -10,7 +10,10 @@ import React, { Suspense } from "react";
 import { AppIcon } from "@components/app-icon";
 import { ColorModeContextProvider } from "@contexts/color-mode";
 import { authProvider } from "@providers/auth-provider";
-import { dataProviders } from "@providers/data-provider";
+import {
+  dataProviders,
+  PROVIDER_NAME_PET_CLINIC,
+} from "@providers/data-provider";
 
 export const metadata: Metadata = {
   title: "Refine",
@@ -65,13 +68,13 @@ export default function RootLayout({
                       },
                       {
                         name: "specialties",
-                        list: "/specialties",
-                        create: "/specialties/create",
-                        edit: "/specialties/edit/:id",
-                        show: "/specialties/show/:id",
+                        list: "/petclinic/specialties",
+                        create: "/petclinic/specialties/create",
+                        edit: "/petclinic/specialties/edit/:id",
+                        show: "/petclinic/specialties/show/:id",
                         meta: {
                           canDelete: true,
-                          dataProviderName: "petclinic",
+                          dataProviderName: PROVIDER_NAME_PET_CLINIC,
                         },
                       },
                     ]}
