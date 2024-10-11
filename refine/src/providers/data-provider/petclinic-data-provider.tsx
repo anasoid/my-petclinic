@@ -11,9 +11,9 @@ type MethodTypesWithBody = "post" | "put" | "patch";
  * Check out the Data Provider documentation for detailed information
  * https://refine.dev/docs/api-reference/core/providers/data-provider/
  **/
-export const petClinicDataProvider  = (
+export const petClinicDataProvider = (
   apiUrl: string,
-  httpClient: AxiosInstance = axiosInstancePetClinic,
+  httpClient: AxiosInstance = axiosInstancePetClinic
 ): Omit<
   Required<DataProvider>,
   "createMany" | "updateMany" | "deleteMany"
@@ -68,11 +68,17 @@ export const petClinicDataProvider  = (
     const { headers, method } = meta ?? {};
     const requestMethod = (method as MethodTypes) ?? "get";
 
-    const { data } = await httpClient[requestMethod](
-      `${apiUrl}/${resource}?${stringify({ id: ids })}`,
-      { headers },
+    const data = await Promise.all(
+      ids
+        .filter((item, index) => ids.indexOf(item) === index)
+        .map(async (id) => {
+          const { data } = await httpClient[requestMethod](
+            `${apiUrl}/${resource}?${id?.id ? id.id : id}`,
+            { headers }
+          );
+          return data;
+        })
     );
-
     return {
       data,
     };
@@ -97,7 +103,7 @@ export const petClinicDataProvider  = (
     const url = `${apiUrl}/${resource}/${id}`;
 
     const { headers, method } = meta ?? {};
-    const requestMethod = (method as MethodTypesWithBody) ?? "patch";
+    const requestMethod = (method as MethodTypesWithBody) ?? "put";
 
     const { data } = await httpClient[requestMethod](url, variables, {
       headers,
