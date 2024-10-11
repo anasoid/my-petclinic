@@ -75,7 +75,8 @@ export class AuthManager {
 
   isAuthenticated(): boolean {
     let token = this.getCurrentToken();
-    if (token) {
+    let cookie = Cookies.get(COOKIE_AUTH_KEY);
+    if (token && cookie) {
       return true;
     } else {
       return false;
