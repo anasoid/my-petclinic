@@ -50,7 +50,7 @@ export default function RootLayout({
                         name: "petclinic",
                         meta: {
                           canDelete: true,
-                          label:"Pet clinic"
+                          label: "Pet clinic",
                         },
                       },
                       {
@@ -62,7 +62,7 @@ export default function RootLayout({
                         meta: {
                           canDelete: true,
                           dataProviderName: PROVIDER_NAME_PET_CLINIC,
-                          parent:"petclinic",
+                          parent: "petclinic",
                         },
                       },
                       {
@@ -74,7 +74,19 @@ export default function RootLayout({
                         meta: {
                           label: "PetTypes",
                           dataProviderName: PROVIDER_NAME_PET_CLINIC,
-                          parent:"petclinic",
+                          parent: "petclinic",
+                        },
+                      },
+                      {
+                        name: "vets",
+                        list: "/petclinic/vets",
+                        create: "/petclinic/vets/create",
+                        edit: "/petclinic/vets/edit/:id",
+                        show: "/petclinic/vets/show/:id",
+                        meta: {
+                          label: "Vets",
+                          dataProviderName: PROVIDER_NAME_PET_CLINIC,
+                          parent: "petclinic",
                         },
                       },
                       {
