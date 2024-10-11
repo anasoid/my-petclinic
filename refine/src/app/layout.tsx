@@ -77,6 +77,17 @@ export default function RootLayout({
                           dataProviderName: PROVIDER_NAME_PET_CLINIC,
                         },
                       },
+                      {
+                        name: "pet-types",
+                        list: "/petclinic/pet-types",
+                        create: "/petclinic/pet-types/create",
+                        edit: "/petclinic/pet-types/edit/:id",
+                        show: "/petclinic/pet-types/show/:id",
+                        meta: {
+                          label: "PetTypes",
+                          dataProviderName: PROVIDER_NAME_PET_CLINIC,
+                        },
+                      },
                     ]}
                     options={{
                       syncWithLocation: true,
