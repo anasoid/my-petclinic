@@ -6,6 +6,7 @@ import { Edit, useAutocomplete } from "@refinedev/mui";
 import { Box, TextField, Autocomplete } from "@mui/material";
 import { useForm } from "@refinedev/react-hook-form";
 import { Controller } from "react-hook-form";
+import { AutocompleteResource } from "../common/common/AutocompleteResource";
 
 export const VetsEdit = () => {
   const {
@@ -15,13 +16,6 @@ export const VetsEdit = () => {
     control,
     formState: { errors },
   } = useForm();
-
-  const vetsData = query?.data?.data;
-
-  const { autocompleteProps: specialtiesAutocompleteProps } = useAutocomplete({
-    resource: "specialties",
-    defaultValue: vetsData?.specialties,
-  });
 
   return (
     <Edit saveButtonProps={saveButtonProps}>
@@ -71,48 +65,11 @@ export const VetsEdit = () => {
           label="Last Name"
           name="lastName"
         />
-        <Controller
+        <AutocompleteResource
+          resource="specialties"
           control={control}
-          name="specialties"
-          rules={{ required: "This field is required" }}
-          // eslint-disable-next-line
-          defaultValue={[] as any}
-          render={({ field }) => (
-            <Autocomplete
-              {...specialtiesAutocompleteProps}
-              {...field}
-              multiple
-              onChange={(_, value) => {
-                field.onChange(
-                  value?.map((item: any) => {
-                    return { id: item?.id };
-                  })
-                );
-              }}
-              getOptionLabel={(item) => {
-                return (
-                  specialtiesAutocompleteProps?.options?.find(
-                    (p) => p?.id?.toString() === (item?.id ?? item)?.toString()
-                  )?.name ?? ""
-                );
-              }}
-              isOptionEqualToValue={(option, value) =>
-                value === undefined ||
-                option?.id?.toString() === (value?.id ?? value)?.toString()
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Specialties"
-                  margin="normal"
-                  variant="outlined"
-                  error={!!(errors as any)?.specialties}
-                  helperText={(errors as any)?.specialties?.message}
-                  required
-                />
-              )}
-            />
-          )}
+          errors={errors}
+          defaultValue={query?.data?.data?.specialties}
         />
       </Box>
     </Edit>
