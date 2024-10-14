@@ -33,7 +33,7 @@ export default function RootLayout({
   const defaultMode = theme?.value === "dark" ? "dark" : "light";
 
   return (
-    <html lang="en">
+    (<html lang="en">
       <body>
         <Suspense>
           <RefineKbarProvider>
@@ -45,87 +45,89 @@ export default function RootLayout({
                     dataProvider={dataProviders}
                     notificationProvider={notificationProvider}
                     authProvider={authProvider}
-                    resources={[
-                      {
-                        name: "petclinic",
-                        meta: {
-                          canDelete: false,
-                          label: "Pet clinic",
-                        },
+                    resources={[{
+                      name: "petclinic",
+                      meta: {
+                        canDelete: false,
+                        label: "Pet clinic",
                       },
-                      {
-                        name: "vets",
-                        list: "/petclinic/vets",
-                        create: "/petclinic/vets/create",
-                        edit: "/petclinic/vets/edit/:id",
-                        show: "/petclinic/vets/show/:id",
-                        meta: {
-                          label: "Vets",
-                          dataProviderName: PROVIDER_NAME_PET_CLINIC,
-                          parent: "petclinic",
-                        },
+                    }, {
+                      name: "vets",
+                      list: "/petclinic/vets",
+                      create: "/petclinic/vets/create",
+                      edit: "/petclinic/vets/edit/:id",
+                      show: "/petclinic/vets/show/:id",
+                      meta: {
+                        label: "Vets",
+                        dataProviderName: PROVIDER_NAME_PET_CLINIC,
+                        parent: "petclinic",
                       },
-                      {
-                        name: "master-data",
-                        meta: {
-                          canDelete: false,
-                          label: "Master Data",
-                          parent: "petclinic",
-                        },
+                    }, {
+                      name: "owners",
+                      list: "/petclinic/owners",
+                      create: "/petclinic/owners/create",
+                      edit: "/petclinic/owners/edit/:id",
+                      show: "/petclinic/owners/show/:id",
+                      meta: {
+                        label: "Owners",
+                        dataProviderName: PROVIDER_NAME_PET_CLINIC,
+                        parent: "petclinic",
                       },
-                      {
-                        name: "specialties",
-                        list: "/petclinic/specialties",
-                        create: "/petclinic/specialties/create",
-                        edit: "/petclinic/specialties/edit/:id",
-                        show: "/petclinic/specialties/show/:id",
-                        meta: {
-                          canDelete: true,
-                          dataProviderName: PROVIDER_NAME_PET_CLINIC,
-                          parent: "master-data",
-                        },
+                    }, {
+                      name: "master-data",
+                      meta: {
+                        canDelete: false,
+                        label: "Master Data",
+                        parent: "petclinic",
                       },
-                      {
-                        name: "pet-types",
-                        list: "/petclinic/pet-types",
-                        create: "/petclinic/pet-types/create",
-                        edit: "/petclinic/pet-types/edit/:id",
-                        show: "/petclinic/pet-types/show/:id",
-                        meta: {
-                          label: "PetTypes",
-                          dataProviderName: PROVIDER_NAME_PET_CLINIC,
-                          parent: "master-data",
-                        },
+                    }, {
+                      name: "specialties",
+                      list: "/petclinic/specialties",
+                      create: "/petclinic/specialties/create",
+                      edit: "/petclinic/specialties/edit/:id",
+                      show: "/petclinic/specialties/show/:id",
+                      meta: {
+                        canDelete: true,
+                        dataProviderName: PROVIDER_NAME_PET_CLINIC,
+                        parent: "master-data",
                       },
-                      {
-                        name: "demo",
-                        meta: {
-                          canDelete: true,
-                        },
+                    }, {
+                      name: "pet-types",
+                      list: "/petclinic/pet-types",
+                      create: "/petclinic/pet-types/create",
+                      edit: "/petclinic/pet-types/edit/:id",
+                      show: "/petclinic/pet-types/show/:id",
+                      meta: {
+                        label: "PetTypes",
+                        dataProviderName: PROVIDER_NAME_PET_CLINIC,
+                        parent: "master-data",
                       },
-                      {
-                        name: "blog_posts",
-                        list: "/demo/blog-posts",
-                        create: "/demo/blog-posts/create",
-                        edit: "/demo/blog-posts/edit/:id",
-                        show: "/demo/blog-posts/show/:id",
-                        meta: {
-                          canDelete: true,
-                          parent: "demo",
-                        },
+                    }, {
+                      name: "demo",
+                      meta: {
+                        canDelete: true,
                       },
-                      {
-                        name: "categories",
-                        list: "/demo/categories",
-                        create: "/demo/categories/create",
-                        edit: "/demo/categories/edit/:id",
-                        show: "/demo/categories/show/:id",
-                        meta: {
-                          canDelete: true,
-                          parent: "demo",
-                        },
+                    }, {
+                      name: "blog_posts",
+                      list: "/demo/blog-posts",
+                      create: "/demo/blog-posts/create",
+                      edit: "/demo/blog-posts/edit/:id",
+                      show: "/demo/blog-posts/show/:id",
+                      meta: {
+                        canDelete: true,
+                        parent: "demo",
                       },
-                    ]}
+                    }, {
+                      name: "categories",
+                      list: "/demo/categories",
+                      create: "/demo/categories/create",
+                      edit: "/demo/categories/edit/:id",
+                      show: "/demo/categories/show/:id",
+                      meta: {
+                        canDelete: true,
+                        parent: "demo",
+                      },
+                    }]}
                     options={{
                       syncWithLocation: true,
                       warnWhenUnsavedChanges: true,
@@ -143,6 +145,6 @@ export default function RootLayout({
           </RefineKbarProvider>
         </Suspense>
       </body>
-    </html>
+    </html>)
   );
 }
